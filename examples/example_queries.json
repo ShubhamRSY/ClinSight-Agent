@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Trials over time for a drug",
+    "request": {
+      "query": "How has the number of trials for this drug changed over time?",
+      "drug_name": "Pembrolizumab"
+    }
+  },
+  {
+    "name": "Trials by phase for a condition",
+    "request": {
+      "query": "Show me the distribution of trials by phase for this condition",
+      "condition": "Non-small Cell Lung Cancer"
+    }
+  },
+  {
+    "name": "Geographic distribution of trials",
+    "request": {
+      "query": "How many active trials are there in different countries?",
+      "status": "RECRUITING"
+    }
+  },
+  {
+    "name": "Sponsor landscape",
+    "request": {
+      "query": "Which sponsors have the most clinical trials for diabetes?",
+      "condition": "Diabetes"
+    }
+  },
+  {
+    "name": "Trials by status breakdown",
+    "request": {
+      "query": "Break down trials by their current status for COVID-19",
+      "condition": "COVID-19"
+    }
+  }
+]

@@ -1,0 +1,20 @@
+.env
+.venv/
+venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.benchmarks/
+.mypy_cache/
+.review_pages/
+*.egg-info/
+.DS_Store
+.idea/
+.vscode/
+
+# Local assignment PDFs / large binaries (not needed to run the app)
+*.pdf
+Take-Home Assignment*.pdf
+LLM API Request.pdf
+

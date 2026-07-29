@@ -1,0 +1,1449 @@
+[
+  {
+    "name": "Trials over time for a drug",
+    "request": {
+      "query": "How has the number of trials for this drug changed over time?",
+      "drug_name": "Pembrolizumab"
+    },
+    "response": {
+      "visualization": {
+        "type": "time_series",
+        "title": "Trend of Clinical Trials for Pembrolizumab Over Time",
+        "encoding": {
+          "x": {
+            "field": "year",
+            "type": "temporal"
+          },
+          "y": {
+            "field": "trial_count",
+            "type": "quantitative"
+          },
+          "color": null,
+          "size": null,
+          "source": null,
+          "target": null,
+          "edge_weight": null
+        },
+        "data": [
+          {
+            "label": "2011",
+            "value": 1,
+            "series": null,
+            "x": "2011",
+            "y": 1,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT01295827",
+                "excerpt": "Study of Pembrolizumab (MK-3475) in Participants With Progressive Locally Advanced or Metastatic Carcinoma, Melanoma, or Non-small Cell Lung Carcinoma (P07990/MK-3475-001/KEYNOTE-001) | Status: COMPLETED | Phase: Phase 1"
+              }
+            ],
+            "year": "2011",
+            "trial_count": 1
+          },
+          {
+            "label": "2014",
+            "value": 2,
+            "series": null,
+            "x": "2014",
+            "y": 2,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT02256436",
+                "excerpt": "A Study of Pembrolizumab (MK-3475) Versus Paclitaxel, Docetaxel, or Vinflunine for Participants With Advanced Urothelial Cancer (MK-3475-045/KEYNOTE-045) | Status: COMPLETED | Phase: Phase 3"
+              },
+              {
+                "nct_id": "NCT01789827",
+                "excerpt": "Aldesleukin Imaging in Viewing Tumor Growth in Patients With Stage IV Melanoma Receiving Ipilimumab or Pembrolizumab Therapy | Status: COMPLETED | Phase: Early Phase 1"
+              }
+            ],
+            "year": "2014",
+            "trial_count": 2
+          },
+          {
+            "label": "2015",
+            "value": 7,
+            "series": null,
+            "x": "2015",
+            "y": 7,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT02301039",
+                "excerpt": "SARC028: A Phase II Study of the Anti-PD1 Antibody Pembrolizumab (MK-3475) in Patients With Advanced Sarcomas | Status: COMPLETED | Phase: Phase 2"
+              },
+              {
+                "nct_id": "NCT02460198",
+                "excerpt": "Study of Pembrolizumab (MK-3475) as Monotherapy in Participants With Previously-Treated Locally Advanced Unresectable or Metastatic Colorectal Cancer (MK-3475-164/KEYNOTE-164) | Status: COMPLETED | Phase: Phase 2"
+              }
+            ],
+            "year": "2015",
+            "trial_count": 7,
+            "_citations_truncated": true
+          },
+          {
+            "label": "2016",
+            "value": 8,
+            "series": null,
+            "x": "2016",
+            "y": 8,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT02823405",
+                "excerpt": "X4P-001 and Pembrolizumab in Patients With Advanced Melanoma | Status: COMPLETED | Phase: Phase 1"
+              },
+              {
+                "nct_id": "NCT02880228",
+                "excerpt": "Pembrolizumab, Lenalidomide, and Dexamethasone in Treating Patients With Newly Diagnosed Multiple Myeloma Eligible for Stem Cell Transplant | Status: COMPLETED | Phase: Phase 2"
+              }
+            ],
+            "year": "2016",
+            "trial_count": 8,
+            "_citations_truncated": true
+          },
+          {
+            "label": "2017",
+            "value": 10,
+            "series": null,
+            "x": "2017",
+            "y": 10,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT02999477",
+                "excerpt": "A Study Of Changes In PD-L1 Expression During Preoperative Treatment With Nab-Paclitaxel And Pembrolizumab In Hormone Receptor-Positive Breast Cancer | Status: COMPLETED | Phase: Phase 1"
+              },
+              {
+                "nct_id": "NCT03345134",
+                "excerpt": "Pembrolizumab in Combination With BCG After Ablation in Patients With UUTTCC Without Nephroureterectomy | Status: NOT_YET_RECRUITING | Phase: Phase 2"
+              }
+            ],
+            "year": "2017",
+            "trial_count": 10,
+            "_citations_truncated": true
+          },
+          {
+            "label": "2018",
+            "value": 5,
+            "series": null,
+            "x": "2018",
+            "y": 5,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT03267888",
+                "excerpt": "Pembrolizumab and Radiation Therapy in Patients With Relapsed or Refractory Multiple Myeloma | Status: COMPLETED | Phase: Phase 1"
+              },
+              {
+                "nct_id": "NCT03167151",
+                "excerpt": "Pembrolizumab in Intermediate Risk Recurrent Non-muscle Invasive Bladder Cancer (NMIBC) | Status: TERMINATED | Phase: Phase 1"
+              }
+            ],
+            "year": "2018",
+            "trial_count": 5,
+            "_citations_truncated": true
+          },
+          {
+            "label": "2019",
+            "value": 3,
+            "series": null,
+            "x": "2019",
+            "y": 3,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT04001101",
+                "excerpt": "Anti-PD-1 +/- RT for MSI-H Solid Tumors | Status: WITHDRAWN | Phase: Phase 2"
+              },
+              {
+                "nct_id": "NCT04091932",
+                "excerpt": "Treatment of PD-1 Inhibitor in AIDS-associated PML | Status: UNKNOWN | Phase: Phase 2"
+              }
+            ],
+            "year": "2019",
+            "trial_count": 3,
+            "_citations_truncated": true
+          },
+          {
+            "label": "2020",
+            "value": 10,
+            "series": null,
+            "x": "2020",
+            "y": 10,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT04417192",
+                "excerpt": "Olaparib Monotherapy and Olaparib + Pembrolizumab Combination Therapy for Ovarian Cancer | Status: COMPLETED | Phase: Phase 2"
+              },
+              {
+                "nct_id": "NCT04295863",
+                "excerpt": "Comparing Dosing Intervals of Nivolumab or Pembrolizumab in Locally Advanced or Metastatic Cancers | Status: RECRUITING | Phase: Phase 1"
+              }
+            ],
+            "year": "2020",
+            "trial_count": 10,
+            "_citations_truncated": true
+          },
+          {
+            "label": "2021",
+            "value": 8,
+            "series": null,
+            "x": "2021",
+            "y": 8,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT04859777",
+                "excerpt": "A Study of MPT-0118 in Subjects With Advanced or Metastatic Refractory Solid Tumors | Status: UNKNOWN | Phase: Phase 1"
+              },
+              {
+                "nct_id": "NCT05126472",
+                "excerpt": "Study of 2141-V11 in People With Non-muscle Invasive Bladder Cancer That Did Not Respond to Standard Treatment | Status: RECRUITING | Phase: Phase 1"
+              }
+            ],
+            "year": "2021",
+            "trial_count": 8,
+            "_citations_truncated": true
+          },
+          {
+            "label": "2022",
+            "value": 7,
+            "series": null,
+            "x": "2022",
+            "y": 7,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT05366166",
+                "excerpt": "Pembrolizumab Plus Olaparib in LA-HNSCC | Status: ACTIVE_NOT_RECRUITING | Phase: Phase 2"
+              },
+              {
+                "nct_id": "NCT05239741",
+                "excerpt": "Study of Pembrolizumab (MK-3475) Versus Chemotherapy in Chinese Participants With Stage IV Colorectal Cancer (MK-3475-C66) | Status: ACTIVE_NOT_RECRUITING | Phase: Phase 3"
+              }
+            ],
+            "year": "2022",
+            "trial_count": 7,
+            "_citations_truncated": true
+          },
+          {
+            "label": "2023",
+            "value": 9,
+            "series": null,
+            "x": "2023",
+            "y": 9,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT06307093",
+                "excerpt": "Study Comparing the Pharmacokinetics, Safety, and Efficacy of RPH-075 and Keytruda\u00ae in Patients With Malignant Neoplasms | Status: COMPLETED | Phase: Phase 1"
+              },
+              {
+                "nct_id": "NCT05933577",
+                "excerpt": "A Clinical Study of Intismeran Autogene (V940) Plus Pembrolizumab in People With High-Risk Melanoma (V940-001) | Status: ACTIVE_NOT_RECRUITING | Phase: Phase 3"
+              }
+            ],
+            "year": "2023",
+            "trial_count": 9,
+            "_citations_truncated": true
+          },
+          {
+            "label": "2024",
+            "value": 8,
+            "series": null,
+            "x": "2024",
+            "y": 8,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT05775471",
+                "excerpt": "Pembrolizumab and Enfortumab Vedotin With Pembrolizumab Prior to and After Radical Nephroureterectomy for High-Risk Upper Tract Urothelial Cancer | Status: RECRUITING | Phase: Phase 2"
+              },
+              {
+                "nct_id": "NCT06389422",
+                "excerpt": "Phase II Study of Moderate-dose Hypofractionated RT Combined With Pembrolizumab for HCC With Diffuse Tumor Thrombosis | Status: RECRUITING | Phase: Phase 2"
+              }
+            ],
+            "year": "2024",
+            "trial_count": 8,
+            "_citations_truncated": true
+          },
+          {
+            "label": "2025",
+            "value": 14,
+            "series": null,
+            "x": "2025",
+            "y": 14,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT06814067",
+                "excerpt": "Phase II Multi-centered Study of Perioperative Ivonescimab Versus Pembrolizumab Combined with Standard of Care (SOC) in Patients with Resectable, Locally Advanced Head and Neck Squamous Cell Carcinoma | Status: NOT_YET_RECRUITING | Phase: Phase 2"
+              },
+              {
+                "nct_id": "NCT07224971",
+                "excerpt": "Impact of Circadian Rhythm on Immunotherapy | Status: RECRUITING | Phase: Phase 2"
+              }
+            ],
+            "year": "2025",
+            "trial_count": 14,
+            "_citations_truncated": true
+          },
+          {
+            "label": "2026",
+            "value": 7,
+            "series": null,
+            "x": "2026",
+            "y": 7,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT07629700",
+                "excerpt": "Study of Peripheral Neuropathy in Patients With Advanced Urothelial Cancer Treated With Enfortumab Vedotin and Pembrolizumab With Supportive Neuridase (ENDEAVOR) | Status: NOT_YET_RECRUITING | Phase: Na"
+              },
+              {
+                "nct_id": "NCT07360132",
+                "excerpt": "Phase III Clinical Study of HB0025 Combined With Chemotherapy Versus Pembrolizumab Combined With Chemotherapy for the First-Line Treatment of Advanced Squamous Non-Small Cell Lung Cancer | Status: NOT_YET_RECRUITING | Phase: Phase 3"
+              }
+            ],
+            "year": "2026",
+            "trial_count": 7,
+            "_citations_truncated": true
+          }
+        ]
+      },
+      "meta": {
+        "filters": {
+          "drug_name": "Pembrolizumab"
+        },
+        "source": "clinicaltrials.gov",
+        "units": null,
+        "time_granularity": "year",
+        "sorting": null,
+        "grouping": "by_year",
+        "total_records": 2912,
+        "notes": "The data represents the number of clinical trials for Pembrolizumab aggregated by year. The trend shows how the interest and research activity around this drug have evolved over time."
+      }
+    },
+    "elapsed_sec": 3.96
+  },
+  {
+    "name": "Trials by phase for a condition",
+    "request": {
+      "query": "Show me the distribution of trials by phase for this condition",
+      "condition": "Non-small Cell Lung Cancer"
+    },
+    "response": {
+      "visualization": {
+        "type": "bar_chart",
+        "title": "Distribution of Clinical Trials by Phase for Non-small Cell Lung Cancer",
+        "encoding": {
+          "x": {
+            "field": "phase",
+            "type": "nominal"
+          },
+          "y": {
+            "field": "trial_count",
+            "type": "quantitative"
+          },
+          "color": null,
+          "size": null,
+          "source": null,
+          "target": null,
+          "edge_weight": null
+        },
+        "data": [
+          {
+            "label": "Phase 1",
+            "value": 32,
+            "series": null,
+            "x": "Phase 1",
+            "y": 32,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT03360929",
+                "excerpt": "Evaluate Safety, Tolerability, Pharmacokinetics and Anti-tumor Activity of AZD3759 | Status: COMPLETED | Phase: Phase 1"
+              },
+              {
+                "nct_id": "NCT03268057",
+                "excerpt": "VX15/2503 in Combination With Avelumab in Advanced Non-small Cell Lung Cancer | Status: COMPLETED | Phase: Phase 1"
+              }
+            ],
+            "phase": "Phase 1",
+            "trial_count": 32,
+            "_citations_truncated": true
+          },
+          {
+            "label": "Phase 2",
+            "value": 28,
+            "series": null,
+            "x": "Phase 2",
+            "y": 28,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT00103207",
+                "excerpt": "Cetuximab in Treating Patients With Recurrent or Stage IIIB or Stage IV Lung Cancer | Status: COMPLETED | Phase: Phase 2"
+              },
+              {
+                "nct_id": "NCT01913067",
+                "excerpt": "Evaluation of Cabazitaxel in Patients With Brain Metastasis Secondary to Breast Cancer and NSCLC | Status: WITHDRAWN | Phase: Phase 2"
+              }
+            ],
+            "phase": "Phase 2",
+            "trial_count": 28,
+            "_citations_truncated": true
+          },
+          {
+            "label": "NA",
+            "value": 26,
+            "series": null,
+            "x": "NA",
+            "y": 26,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT00973427",
+                "excerpt": "DNA Chip Based Prognosis of Lung Cancer | Status: COMPLETED"
+              },
+              {
+                "nct_id": "NCT07267000",
+                "excerpt": "EXERCISE AND THE IMMUNE RESPONSE IN LUNG CANCER | Status: RECRUITING | Phase: Na"
+              }
+            ],
+            "phase": "NA",
+            "trial_count": 26,
+            "_citations_truncated": true
+          },
+          {
+            "label": "Phase 3",
+            "value": 14,
+            "series": null,
+            "x": "Phase 3",
+            "y": 14,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT07182682",
+                "excerpt": "A Phase 3 Study of Sunvozertinib Versus Placebo as Adjuvant Therapy in Patients With Early-Stage Non-Small Cell Lung Cancer Harboring EGFR Exon 20 Insertion Mutations or PACC Mutations After Radical Surgery | Status: RECRUITING | Phase: Phase 3"
+              },
+              {
+                "nct_id": "NCT01804686",
+                "excerpt": "A Long-term Extension Study of PCI-32765 (Ibrutinib) | Status: RECRUITING | Phase: Phase 3"
+              }
+            ],
+            "phase": "Phase 3",
+            "trial_count": 14,
+            "_citations_truncated": true
+          }
+        ]
+      },
+      "meta": {
+        "filters": {
+          "condition": "Non-small Cell Lung Cancer"
+        },
+        "source": "clinicaltrials.gov",
+        "units": null,
+        "time_granularity": null,
+        "sorting": null,
+        "grouping": "by_phase",
+        "total_records": 8470,
+        "notes": "The data represents the count of clinical trials categorized by their respective phases for the condition Non-small Cell Lung Cancer. The 'NA' phase indicates trials without a specified phase."
+      }
+    },
+    "elapsed_sec": 3.86
+  },
+  {
+    "name": "Geographic distribution of trials",
+    "request": {
+      "query": "How many active trials are there in different countries?",
+      "status": "RECRUITING"
+    },
+    "response": {
+      "visualization": {
+        "type": "bar_chart",
+        "title": "Active Clinical Trials by Country",
+        "encoding": {
+          "x": {
+            "field": "country",
+            "type": "nominal"
+          },
+          "y": {
+            "field": "trial_count",
+            "type": "quantitative"
+          },
+          "color": null,
+          "size": null,
+          "source": null,
+          "target": null,
+          "edge_weight": null
+        },
+        "data": [
+          {
+            "label": "United States",
+            "value": 34,
+            "series": null,
+            "x": "United States",
+            "y": 34,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT06096259",
+                "excerpt": "Preventing Injured Knees From osteoArthritis: Severity Outcomes | Status: RECRUITING | Phase: Phase 2"
+              },
+              {
+                "nct_id": "NCT06054880",
+                "excerpt": "Indigotindisulfonate Sodium Injection, USP as an Aid in the Determination of Ureteral Patency | Status: RECRUITING | Phase: Phase 4"
+              }
+            ],
+            "country": "United States",
+            "trial_count": 34,
+            "_citations_truncated": true
+          },
+          {
+            "label": "China",
+            "value": 15,
+            "series": null,
+            "x": "China",
+            "y": 15,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT07182682",
+                "excerpt": "A Phase 3 Study of Sunvozertinib Versus Placebo as Adjuvant Therapy in Patients With Early-Stage Non-Small Cell Lung Cancer Harboring EGFR Exon 20 Insertion Mutations or PACC Mutations After Radical Surgery | Status: RECRUITING | Phase: Phase 3"
+              },
+              {
+                "nct_id": "NCT06245746",
+                "excerpt": "UCMSC-Exo for Chemotherapy-induced Myelosuppression in Acute Myeloid Leukemia | Status: RECRUITING | Phase: Phase 1"
+              }
+            ],
+            "country": "China",
+            "trial_count": 15,
+            "_citations_truncated": true
+          },
+          {
+            "label": "Italy",
+            "value": 8,
+            "series": null,
+            "x": "Italy",
+            "y": 8,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT07546279",
+                "excerpt": "The Use of Two Bone Substitutes in Adjunct to EMD for the Treatment of One- and Two-wall Intrabony Defects. | Status: RECRUITING | Phase: Na"
+              },
+              {
+                "nct_id": "NCT06778772",
+                "excerpt": "Transition From Pediatric to Adult Epilepsy Care | Status: RECRUITING"
+              }
+            ],
+            "country": "Italy",
+            "trial_count": 8,
+            "_citations_truncated": true
+          },
+          {
+            "label": "Switzerland",
+            "value": 5,
+            "series": null,
+            "x": "Switzerland",
+            "y": 5,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT06991842",
+                "excerpt": "Effect of Phosphoric Acid Etching Duration on Direct Resin-Based Composite Restorations in Permanent Anterior Teeth | Status: RECRUITING | Phase: Na"
+              },
+              {
+                "nct_id": "NCT06794372",
+                "excerpt": "[68Ga]Ga-FAPI-46 in Staging of Head and Neck Carcinomas | Status: RECRUITING | Phase: Phase 2"
+              }
+            ],
+            "country": "Switzerland",
+            "trial_count": 5,
+            "_citations_truncated": true
+          },
+          {
+            "label": "France",
+            "value": 4,
+            "series": null,
+            "x": "France",
+            "y": 4,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT06038331",
+                "excerpt": "Use of a Treated, Devitalized and Sterile Umbilical Cord Amniotic Membrane in the Treatment of STT Osteoarthritis | Status: RECRUITING | Phase: Phase 2"
+              },
+              {
+                "nct_id": "NCT06845501",
+                "excerpt": "Purine Supplementation in Patients With AICA-Ribosiduria | Status: RECRUITING | Phase: Na"
+              }
+            ],
+            "country": "France",
+            "trial_count": 4,
+            "_citations_truncated": true
+          },
+          {
+            "label": "Turkey (T\u00fcrkiye)",
+            "value": 3,
+            "series": null,
+            "x": "Turkey (T\u00fcrkiye)",
+            "y": 3,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT07448246",
+                "excerpt": "Effect of Bilateral Rhomboid Intercostal Block on Postoperative Pain After Breast Implant Surgery | Status: RECRUITING | Phase: Na"
+              },
+              {
+                "nct_id": "NCT07481266",
+                "excerpt": "Single-Window Versus Two-Window Posterolateral Approach for Malleolar Fractures | Status: RECRUITING | Phase: Na"
+              }
+            ],
+            "country": "Turkey (T\u00fcrkiye)",
+            "trial_count": 3,
+            "_citations_truncated": true
+          },
+          {
+            "label": "Australia",
+            "value": 3,
+            "series": null,
+            "x": "Australia",
+            "y": 3,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT05770622",
+                "excerpt": "Improving Therapeutic Drug Monitoring and Dosing for Vancomycin in Young Infants With Infections (VANCAPP) (Part 2) | Status: RECRUITING | Phase: Phase 4"
+              },
+              {
+                "nct_id": "NCT07026175",
+                "excerpt": "Unravelling Energy Issues Underpinning Low Energy Availability in High Performance Athletes | Status: RECRUITING | Phase: Na"
+              }
+            ],
+            "country": "Australia",
+            "trial_count": 3,
+            "_citations_truncated": true
+          },
+          {
+            "label": "Canada",
+            "value": 3,
+            "series": null,
+            "x": "Canada",
+            "y": 3,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT05125146",
+                "excerpt": "Investigating the Effectiveness of E-CBTi Compared to Pharmaceutical Interventions in Treating Insomnia | Status: RECRUITING | Phase: Na"
+              },
+              {
+                "nct_id": "NCT04335994",
+                "excerpt": "ENhancing Outcomes in Cognitive Impairment Through Use of Home Sleep ApNea Testing | Status: RECRUITING | Phase: Na"
+              }
+            ],
+            "country": "Canada",
+            "trial_count": 3,
+            "_citations_truncated": true
+          },
+          {
+            "label": "Egypt",
+            "value": 3,
+            "series": null,
+            "x": "Egypt",
+            "y": 3,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT07394257",
+                "excerpt": "Intrastromal Moxifloxacin as an Adjunctive Therapy in Recalcitrant Bacterial Keratitis | Status: RECRUITING | Phase: Na"
+              },
+              {
+                "nct_id": "NCT05291845",
+                "excerpt": "Candida Antigen and Bivalent HPV Vaccine in the Treatment of Multiple Warts | Status: RECRUITING | Phase: Phase 2"
+              }
+            ],
+            "country": "Egypt",
+            "trial_count": 3,
+            "_citations_truncated": true
+          },
+          {
+            "label": "Norway",
+            "value": 2,
+            "series": null,
+            "x": "Norway",
+            "y": 2,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT07062042",
+                "excerpt": "Empowering Narratives | Status: RECRUITING | Phase: Na"
+              },
+              {
+                "nct_id": "NCT06749951",
+                "excerpt": "Cognitive Behavioural Therapy for Insomnia in Patients With Coronary Heart Disease | Status: RECRUITING | Phase: Na"
+              }
+            ],
+            "country": "Norway",
+            "trial_count": 2
+          },
+          {
+            "label": "Denmark",
+            "value": 2,
+            "series": null,
+            "x": "Denmark",
+            "y": 2,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT06211231",
+                "excerpt": "MY-ENDO -- Mind Your ENDOmetriosis: a Digital Mindfulness- and Acceptance-based Endometriosis Self-management Program | Status: RECRUITING | Phase: Na"
+              },
+              {
+                "nct_id": "NCT07007169",
+                "excerpt": "Mediterranean Diet and Inequality in Early Breast Cancer | Status: RECRUITING | Phase: Phase 2"
+              }
+            ],
+            "country": "Denmark",
+            "trial_count": 2
+          },
+          {
+            "label": "Hong Kong",
+            "value": 2,
+            "series": null,
+            "x": "Hong Kong",
+            "y": 2,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT07604753",
+                "excerpt": "Validation of the CIDI 5.0 Against the SCID-5 for Lifetime Mental Disorders | Status: RECRUITING"
+              },
+              {
+                "nct_id": "NCT06955195",
+                "excerpt": "Youth-for-Youth Mental Wellness Care and Action | Status: RECRUITING | Phase: Na"
+              }
+            ],
+            "country": "Hong Kong",
+            "trial_count": 2
+          },
+          {
+            "label": "Spain",
+            "value": 2,
+            "series": null,
+            "x": "Spain",
+            "y": 2,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT07007156",
+                "excerpt": "Is a Positive NECPAL in ICU Patients Associated With Higher Mortality | Status: RECRUITING"
+              },
+              {
+                "nct_id": "NCT07287501",
+                "excerpt": "Efficacy of Pain Science Education Combined With Exercise in Older Adults With Chronic Pain | Status: RECRUITING | Phase: Na"
+              }
+            ],
+            "country": "Spain",
+            "trial_count": 2
+          },
+          {
+            "label": "Austria",
+            "value": 2,
+            "series": null,
+            "x": "Austria",
+            "y": 2,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT04430075",
+                "excerpt": "MiCLASP Post Market Clinical Follow-Up (PMCF) Study | Status: RECRUITING"
+              },
+              {
+                "nct_id": "NCT07267000",
+                "excerpt": "EXERCISE AND THE IMMUNE RESPONSE IN LUNG CANCER | Status: RECRUITING | Phase: Na"
+              }
+            ],
+            "country": "Austria",
+            "trial_count": 2
+          },
+          {
+            "label": "Chile",
+            "value": 1,
+            "series": null,
+            "x": "Chile",
+            "y": 1,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT06551870",
+                "excerpt": "Xbox Kinect Sports Versus Nintendo Switch Sports | Status: RECRUITING | Phase: Na"
+              }
+            ],
+            "country": "Chile",
+            "trial_count": 1
+          }
+        ]
+      },
+      "meta": {
+        "filters": {
+          "status": "RECRUITING"
+        },
+        "source": "clinicaltrials.gov",
+        "units": null,
+        "time_granularity": null,
+        "sorting": null,
+        "grouping": "by_location",
+        "total_records": 65497,
+        "notes": "The data represents the number of active clinical trials currently recruiting participants, aggregated by country."
+      }
+    },
+    "elapsed_sec": 2.98
+  },
+  {
+    "name": "Sponsor landscape",
+    "request": {
+      "query": "Which sponsors have the most clinical trials for diabetes?",
+      "condition": "Diabetes"
+    },
+    "response": {
+      "visualization": {
+        "type": "bar_chart",
+        "title": "Sponsors with the Most Clinical Trials for Diabetes",
+        "encoding": {
+          "x": {
+            "field": "sponsor",
+            "type": "nominal"
+          },
+          "y": {
+            "field": "trial_count",
+            "type": "quantitative"
+          },
+          "color": null,
+          "size": null,
+          "source": null,
+          "target": null,
+          "edge_weight": null
+        },
+        "data": [
+          {
+            "label": "Novo Nordisk A/S",
+            "value": 8,
+            "series": null,
+            "x": "Novo Nordisk A/S",
+            "y": 8,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT03631186",
+                "excerpt": "A Research Study Looking at How Semaglutide Works in People With Type 2 Diabetes in Switzerland, as Part of Local Clinical Practice (SURE SWITZERLAND) | Status: COMPLETED"
+              },
+              {
+                "nct_id": "NCT07305805",
+                "excerpt": "A Research Study of a New Medicine NNC0363-1063 in Participants With Type 1 Diabetes | Status: COMPLETED | Phase: Phase 1"
+              }
+            ],
+            "sponsor": "Novo Nordisk A/S",
+            "trial_count": 8,
+            "_citations_truncated": true
+          },
+          {
+            "label": "National Heart, Lung, and Blood Institute (NHLBI)",
+            "value": 3,
+            "series": null,
+            "x": "National Heart, Lung, and Blood Institute (NHLBI)",
+            "y": 3,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT00031239",
+                "excerpt": "Sleep Apnea in Look AHEAD Participants - Ancillary to Look AHEAD | Status: COMPLETED"
+              },
+              {
+                "nct_id": "NCT00836329",
+                "excerpt": "Improving Neurologic Outcomes in People With Diabetes Who Are Undergoing Heart Surgery | Status: COMPLETED | Phase: Phase 3"
+              }
+            ],
+            "sponsor": "National Heart, Lung, and Blood Institute (NHLBI)",
+            "trial_count": 3,
+            "_citations_truncated": true
+          },
+          {
+            "label": "University of British Columbia",
+            "value": 2,
+            "series": null,
+            "x": "University of British Columbia",
+            "y": 2,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT00853944",
+                "excerpt": "Effect of Sitagliptin on Graft Function Following Islet Transplantation | Status: TERMINATED | Phase: Phase 3"
+              },
+              {
+                "nct_id": "NCT05710900",
+                "excerpt": "DiEt ChoIce to Promote Type 2 Diabetes rEmission | Status: ACTIVE_NOT_RECRUITING | Phase: Na"
+              }
+            ],
+            "sponsor": "University of British Columbia",
+            "trial_count": 2
+          },
+          {
+            "label": "Eli Lilly and Company",
+            "value": 2,
+            "series": null,
+            "x": "Eli Lilly and Company",
+            "y": 2,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT01477567",
+                "excerpt": "A First-in-Human Study of LY3009385 in Healthy Participants | Status: COMPLETED | Phase: Phase 1"
+              },
+              {
+                "nct_id": "NCT06914895",
+                "excerpt": "A Study of Tirzepatide (LY3298176) Compared With Placebo in Adults With Type 1 Diabetes and Obesity or Overweight | Status: ACTIVE_NOT_RECRUITING | Phase: Phase 3"
+              }
+            ],
+            "sponsor": "Eli Lilly and Company",
+            "trial_count": 2
+          },
+          {
+            "label": "Erasmus Medical Center",
+            "value": 1,
+            "series": null,
+            "x": "Erasmus Medical Center",
+            "y": 1,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT05524259",
+                "excerpt": "MYPP-trial: Myo-inositol Supplementation to Prevent Pregnancy Complications in Women With Polycystic Ovary Syndrome. | Status: UNKNOWN | Phase: Na"
+              }
+            ],
+            "sponsor": "Erasmus Medical Center",
+            "trial_count": 1
+          },
+          {
+            "label": "Biotronik Vertriebs-GmbH",
+            "value": 1,
+            "series": null,
+            "x": "Biotronik Vertriebs-GmbH",
+            "y": 1,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT01593059",
+                "excerpt": "BIOFLOW-III Romania Satellite Registry | Status: TERMINATED"
+              }
+            ],
+            "sponsor": "Biotronik Vertriebs-GmbH",
+            "trial_count": 1
+          },
+          {
+            "label": "Wellizen Australia",
+            "value": 1,
+            "series": null,
+            "x": "Wellizen Australia",
+            "y": 1,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT06897462",
+                "excerpt": "Effect of Science Research Wellness Ndo1 on Glycaemia in Adults With Pre-diabetes | Status: COMPLETED | Phase: Na"
+              }
+            ],
+            "sponsor": "Wellizen Australia",
+            "trial_count": 1
+          },
+          {
+            "label": "Global Preventive Medicine Biotech Co., Ltd.",
+            "value": 1,
+            "series": null,
+            "x": "Global Preventive Medicine Biotech Co., Ltd.",
+            "y": 1,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT06224803",
+                "excerpt": "Evaluation of Effects of Dibifree\u00ae on Regulation of Blood Sugar and HbA1c in Patients With Type II Diabetes | Status: COMPLETED | Phase: Na"
+              }
+            ],
+            "sponsor": "Global Preventive Medicine Biotech Co., Ltd.",
+            "trial_count": 1
+          },
+          {
+            "label": "CSPC Baike (Shandong) Biopharmaceutical Co., Ltd.",
+            "value": 1,
+            "series": null,
+            "x": "CSPC Baike (Shandong) Biopharmaceutical Co., Ltd.",
+            "y": 1,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT06235086",
+                "excerpt": "A Study of TG103 Injection Combined With Metformin in Treatment of Type 2 Diabetes Mellitus | Status: COMPLETED | Phase: Phase 3"
+              }
+            ],
+            "sponsor": "CSPC Baike (Shandong) Biopharmaceutical Co., Ltd.",
+            "trial_count": 1
+          },
+          {
+            "label": "Evidation Health",
+            "value": 1,
+            "series": null,
+            "x": "Evidation Health",
+            "y": 1,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT02827669",
+                "excerpt": "One Drop Experts Program for Type 2 Diabetes Self-Management: Impact on A1c | Status: COMPLETED | Phase: Na"
+              }
+            ],
+            "sponsor": "Evidation Health",
+            "trial_count": 1
+          },
+          {
+            "label": "Brigham and Women's Hospital",
+            "value": 1,
+            "series": null,
+            "x": "Brigham and Women's Hospital",
+            "y": 1,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT05463705",
+                "excerpt": "Addressing Diffusion of Responsibility and Prescribing Burden to Improve Use of Diabetes Medications | Status: COMPLETED | Phase: Na"
+              }
+            ],
+            "sponsor": "Brigham and Women's Hospital",
+            "trial_count": 1
+          },
+          {
+            "label": "Merck Sharp & Dohme LLC",
+            "value": 1,
+            "series": null,
+            "x": "Merck Sharp & Dohme LLC",
+            "y": 1,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT00397631",
+                "excerpt": "Initial Combination With Pioglitazone Study (0431-064) | Status: COMPLETED | Phase: Phase 3"
+              }
+            ],
+            "sponsor": "Merck Sharp & Dohme LLC",
+            "trial_count": 1
+          },
+          {
+            "label": "Sanofi",
+            "value": 1,
+            "series": null,
+            "x": "Sanofi",
+            "y": 1,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT06892002",
+                "excerpt": "Description of Patients With Type 1 Diabetes Treated With Teplizumab | Status: COMPLETED"
+              }
+            ],
+            "sponsor": "Sanofi",
+            "trial_count": 1
+          },
+          {
+            "label": "Indiana University",
+            "value": 1,
+            "series": null,
+            "x": "Indiana University",
+            "y": 1,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT00605839",
+                "excerpt": "Mobile Communication Technology for Adolescents With Diabetes | Status: COMPLETED | Phase: Na"
+              }
+            ],
+            "sponsor": "Indiana University",
+            "trial_count": 1
+          },
+          {
+            "label": "Carmot Therapeutics, Inc.",
+            "value": 1,
+            "series": null,
+            "x": "Carmot Therapeutics, Inc.",
+            "y": 1,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT05110846",
+                "excerpt": "A Study of CT-868 in Overweight and Obese Participants With Type 2 Diabetes Mellitus | Status: COMPLETED | Phase: Phase 2"
+              }
+            ],
+            "sponsor": "Carmot Therapeutics, Inc.",
+            "trial_count": 1
+          }
+        ]
+      },
+      "meta": {
+        "filters": {
+          "condition": "Diabetes"
+        },
+        "source": "clinicaltrials.gov",
+        "units": null,
+        "time_granularity": null,
+        "sorting": null,
+        "grouping": "by_sponsor",
+        "total_records": 24167,
+        "notes": "The data represents the number of clinical trials for diabetes sponsored by various organizations. The chart will display sponsors sorted by the number of trials in descending order."
+      }
+    },
+    "elapsed_sec": 3.22
+  },
+  {
+    "name": "Trials by status breakdown",
+    "request": {
+      "query": "Break down trials by their current status for COVID-19",
+      "condition": "COVID-19"
+    },
+    "response": {
+      "visualization": {
+        "type": "bar_chart",
+        "title": "Breakdown of COVID-19 Trials by Current Status",
+        "encoding": {
+          "x": {
+            "field": "status",
+            "type": "nominal"
+          },
+          "y": {
+            "field": "trial_count",
+            "type": "quantitative"
+          },
+          "color": null,
+          "size": null,
+          "source": null,
+          "target": null,
+          "edge_weight": null
+        },
+        "data": [
+          {
+            "label": "Completed",
+            "value": 54,
+            "series": null,
+            "x": "Completed",
+            "y": 54,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT05323331",
+                "excerpt": "Circuit Training Program in Post COVID-19 Patients | Status: COMPLETED | Phase: Na"
+              },
+              {
+                "nct_id": "NCT05582629",
+                "excerpt": "JT001 (VV116) for the Treatment of COVID-19 | Status: COMPLETED | Phase: Phase 3"
+              }
+            ],
+            "status": "Completed",
+            "trial_count": 54,
+            "_citations_truncated": true
+          },
+          {
+            "label": "Unknown",
+            "value": 32,
+            "series": null,
+            "x": "Unknown",
+            "y": 32,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT05238441",
+                "excerpt": "A Phase II Clinical Trial to Evaluate the Immunogenicity and Safety of SCTV01E in Population Aged \u226518 Years Previously Fully Vaccinated With mRNA COVID-19 Vaccine | Status: UNKNOWN | Phase: Phase 2"
+              },
+              {
+                "nct_id": "NCT05261022",
+                "excerpt": "Love Together, Parent Together: A Protocol for a Pilot Study of an Intervention for Interparental Couples With Young Children | Status: UNKNOWN | Phase: Na"
+              }
+            ],
+            "status": "Unknown",
+            "trial_count": 32,
+            "_citations_truncated": true
+          },
+          {
+            "label": "Withdrawn",
+            "value": 6,
+            "series": null,
+            "x": "Withdrawn",
+            "y": 6,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT05371288",
+                "excerpt": "The Role of Glutathione Deficiency and MSIDS Variables in Long COVID-19 | Status: WITHDRAWN | Phase: Early Phase 1"
+              },
+              {
+                "nct_id": "NCT05621967",
+                "excerpt": "Phonation Therapy to Improve Symptoms and Lung Physiology in Patients Referred for Pulmonary Rehabilitation | Status: WITHDRAWN | Phase: Na"
+              }
+            ],
+            "status": "Withdrawn",
+            "trial_count": 6,
+            "_citations_truncated": true
+          },
+          {
+            "label": "Recruiting",
+            "value": 5,
+            "series": null,
+            "x": "Recruiting",
+            "y": 5,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT06355232",
+                "excerpt": "Covid-19 and Influenza Oral Vaccine Study | Status: RECRUITING | Phase: Phase 1"
+              },
+              {
+                "nct_id": "NCT06821100",
+                "excerpt": "Thymalfasin (Thymosin Alpha 1; Ta1) as an Enhancer of Vaccine Response Among Older Adults Receiving Booster Doses of COVID-19 Vaccine | Status: RECRUITING | Phase: Phase 1"
+              }
+            ],
+            "status": "Recruiting",
+            "trial_count": 5,
+            "_citations_truncated": true
+          },
+          {
+            "label": "Terminated",
+            "value": 1,
+            "series": null,
+            "x": "Terminated",
+            "y": 1,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT04734873",
+                "excerpt": "CPI-006 Plus Standard of Care Versus Placebo Plus Standard of Care in Mild to Moderately Symptomatic Hospitalized Covid-19 Patients | Status: TERMINATED | Phase: Phase 3"
+              }
+            ],
+            "status": "Terminated",
+            "trial_count": 1
+          },
+          {
+            "label": "No Longer Available",
+            "value": 1,
+            "series": null,
+            "x": "No Longer Available",
+            "y": 1,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT06004128",
+                "excerpt": "Provide Pre-approval Single-patient Expanded Access (Compassionate Use) of VYD222 for Patients With Symptomatic COVID-19 Refractory to Other Treatments | Status: NO_LONGER_AVAILABLE"
+              }
+            ],
+            "status": "No Longer Available",
+            "trial_count": 1
+          },
+          {
+            "label": "Not Yet Recruiting",
+            "value": 1,
+            "series": null,
+            "x": "Not Yet Recruiting",
+            "y": 1,
+            "size": null,
+            "source": null,
+            "target": null,
+            "edge_weight": null,
+            "citations": [
+              {
+                "nct_id": "NCT06928129",
+                "excerpt": "Clinical Feasibility of the BinaxNOW\u2122 COVID-19/Flu A&B Combo in the Southern Hemisphere | Status: NOT_YET_RECRUITING | Phase: Na"
+              }
+            ],
+            "status": "Not Yet Recruiting",
+            "trial_count": 1
+          }
+        ]
+      },
+      "meta": {
+        "filters": {
+          "condition": "COVID-19"
+        },
+        "source": "clinicaltrials.gov",
+        "units": null,
+        "time_granularity": null,
+        "sorting": null,
+        "grouping": "by_status",
+        "total_records": 10222,
+        "notes": "The chart displays the number of clinical trials for COVID-19 categorized by their current status. The status includes Completed, Unknown, Withdrawn, Recruiting, Terminated, No Longer Available, and Not Yet Recruiting."
+      }
+    },
+    "elapsed_sec": 2.95
+  }
+]

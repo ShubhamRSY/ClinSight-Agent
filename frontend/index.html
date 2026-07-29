@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ClinSight — Clinical Trial Visualizations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js" defer></script>
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+
+  <header class="top">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">ClinSight</span>
+    </div>
+    <p class="brand-tag">ClinicalTrials.gov → structured visualizations</p>
+  </header>
+
+  <main class="layout">
+    <section class="composer" aria-labelledby="ask-heading">
+      <h1 id="ask-heading">Ask a clinical-trial question</h1>
+      <p class="lede">Natural language in. Chart-ready JSON out — backed by live ClinicalTrials.gov data.</p>
+
+      <form id="query-form">
+        <label class="field">
+          <span>Query</span>
+          <textarea id="query" name="query" rows="3" required placeholder="How has the number of trials for this drug changed over time?"></textarea>
+        </label>
+
+        <details class="filters" id="filters-panel">
+          <summary>Optional filters <span class="filters-hint">drug, condition, phase, location…</span></summary>
+          <div class="field-grid">
+            <label class="field">
+              <span>Drug name</span>
+              <input id="drug_name" name="drug_name" type="text" placeholder="Pembrolizumab" />
+            </label>
+            <label class="field">
+              <span>Condition</span>
+              <input id="condition" name="condition" type="text" placeholder="Diabetes" />
+            </label>
+            <label class="field">
+              <span>Phase</span>
+              <input id="trial_phase" name="trial_phase" type="text" placeholder="Phase 3" />
+            </label>
+            <label class="field">
+              <span>Sponsor</span>
+              <input id="sponsor" name="sponsor" type="text" placeholder="Pfizer" />
+            </label>
+            <label class="field">
+              <span>Country</span>
+              <input id="country" name="country" type="text" placeholder="United States" />
+            </label>
+            <label class="field">
+              <span>Status</span>
+              <input id="status" name="status" type="text" placeholder="RECRUITING" />
+            </label>
+            <label class="field">
+              <span>Start year</span>
+              <input id="start_year" name="start_year" type="number" min="1900" max="2100" placeholder="2015" />
+            </label>
+            <label class="field">
+              <span>End year</span>
+              <input id="end_year" name="end_year" type="number" min="1900" max="2100" placeholder="2024" />
+            </label>
+            <label class="field">
+              <span>Max studies</span>
+              <input id="max_studies" name="max_studies" type="number" min="100" max="5000" step="100" placeholder="1000" />
+            </label>
+          </div>
+        </details>
+
+        <div class="actions">
+          <button type="submit" id="run-btn" class="primary">Run visualization</button>
+          <button type="button" id="clear-btn" class="ghost">Clear</button>
+        </div>
+      </form>
+
+      <div class="examples" aria-label="Example queries">
+        <p class="examples-label">Try an example</p>
+        <div id="example-list" class="example-list"></div>
+      </div>
+    </section>
+
+    <section class="result" aria-live="polite">
+      <div id="empty-state" class="empty">
+        <p>Results appear here after you run a query.</p>
+      </div>
+
+      <div id="loading-state" class="loading hidden">
+        <div class="spinner" aria-hidden="true"></div>
+        <p>Interpreting query, fetching trials, building chart…</p>
+      </div>
+
+      <div id="error-state" class="error hidden"></div>
+
+      <div id="viz-panel" class="viz-panel hidden">
+        <div class="viz-head">
+          <h2 id="viz-title"></h2>
+          <span id="viz-type" class="viz-badge"></span>
+        </div>
+        <div id="chart-wrap" class="chart-wrap">
+          <canvas id="chart"></canvas>
+          <svg id="network" class="network-svg hidden" role="img" aria-label="Network graph"></svg>
+          <div id="network-caption" class="network-caption hidden"></div>
+        </div>
+        <div id="meta-row" class="meta-row"></div>
+        <p id="viz-notes" class="notes"></p>
+
+        <details class="citations" id="citations-block">
+          <summary>Deep citations</summary>
+          <p id="citations-summary" class="citations-summary"></p>
+          <div id="citations-list"></div>
+        </details>
+
+        <details class="raw-json">
+          <summary>Raw JSON response</summary>
+          <div class="raw-json-toolbar">
+            <button type="button" id="copy-json-btn" class="ghost copy-json-btn">Copy JSON</button>
+          </div>
+          <pre id="raw-json"></pre>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <a href="/docs">API docs</a>
+    <span>·</span>
+    <span>Source: clinicaltrials.gov</span>
+  </footer>
+</body>
+</html>
