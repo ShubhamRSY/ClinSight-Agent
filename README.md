@@ -115,7 +115,7 @@ Local UI at [http://localhost:8000/](http://localhost:8000/) after `python main.
 
 ### Demo video
 
-Short walkthrough (~1 min): time-series → phase bar chart → drug–sponsor network.
+Short walkthrough (~4.5 min): time-series → phase bar chart → drug–sponsor network (and more in the recording).
 
 Navigate to the files under **`docs/demo/`** (prefer the **MP4** in the GitHub UI):
 
