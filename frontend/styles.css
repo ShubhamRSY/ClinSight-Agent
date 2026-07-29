@@ -395,6 +395,7 @@ button:disabled {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  overflow: auto;
 }
 
 .network-svg {
@@ -426,6 +427,22 @@ button:disabled {
 .network-svg .edge.is-strong {
   stroke: #0f6b5c;
   stroke-opacity: 0.85;
+}
+
+.network-svg .edge-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-opacity: 0;
+}
+
+.network-svg .edge.is-selected {
+  stroke: #c45c26;
+  stroke-opacity: 1;
+}
+
+.network-svg .edge-hit.is-selected {
+  stroke: rgba(196, 92, 38, 0.18);
+  stroke-opacity: 1;
 }
 
 .network-svg .node-label {

@@ -396,8 +396,22 @@ def _is_drug_comparison_query(text: str) -> bool:
     return len(_extract_compared_drugs(text)) >= 2
 
 
+# Tokens that appear in questions but are not disease names. Rejects fragments
+# like "this drug changed" scraped from "…for this drug changed over time?".
+_CONDITION_STOPWORDS = frozenset({
+    "a", "an", "the", "this", "that", "these", "those", "for", "of", "in", "on",
+    "by", "with", "and", "or", "to", "from", "about", "across", "between",
+    "how", "has", "have", "had", "what", "which", "where", "when", "why",
+    "drug", "drugs", "trial", "trials", "study", "studies", "number", "over",
+    "time", "changed", "change", "changes", "compare", "comparing", "versus",
+    "vs", "distribution", "breakdown", "network", "phase", "phases", "early",
+    "late", "sponsored", "sponsor", "sponsors", "status", "recruiting",
+    "patients", "therapy", "treatment", "vaccine", "enrollment",
+})
+
+
 def _is_plausible_condition(name: str) -> bool:
-    """Reject drug-vs-drug phrases and lone drug names masquerading as conditions."""
+    """Reject drug-vs-drug phrases, query fragments, and lone drug names as conditions."""
     raw = (name or "").strip()
     if not raw:
         return False
@@ -407,7 +421,12 @@ def _is_plausible_condition(name: str) -> bool:
     if _is_drug_comparison_query(raw):
         return False
     tokens = _tokenize_query(raw)
+    if not tokens:
+        return False
     if len(tokens) == 1 and _looks_like_drug_token(tokens[0]):
+        return False
+    content = [t for t in tokens if t.lower() not in _CONDITION_STOPWORDS and len(t) >= 3]
+    if not content:
         return False
     return True
 
@@ -535,6 +554,10 @@ def _enrich_search_params_from_text(
         extracted_cond = _extract_condition_from_text(query)
         if extracted_cond:
             params["cond"] = extracted_cond
+        else:
+            # Do not keep LLM cond when the query has no extractable disease —
+            # otherwise phrases like "this drug changed" survive grounding.
+            params.pop("cond", None)
 
     if not request.sponsor:
         extracted_sponsor = _extract_sponsor_from_text(query)

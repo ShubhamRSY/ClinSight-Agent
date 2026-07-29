@@ -25,14 +25,6 @@ const EXAMPLES = [
     },
   },
   {
-    name: "Early vs late phase",
-    blurb: "Melanoma · phase groups",
-    request: {
-      query: "Compare early vs late phase trials for melanoma",
-      condition: "Melanoma",
-    },
-  },
-  {
     name: "Status breakdown",
     blurb: "COVID-19 · share of statuses",
     request: {
@@ -56,59 +48,11 @@ const EXAMPLES = [
     },
   },
   {
-    name: "Enrollment sizes",
-    blurb: "Diabetes · size distribution",
-    request: {
-      query: "Show the distribution of enrollment sizes for diabetes trials",
-      condition: "Diabetes",
-    },
-  },
-  {
-    name: "Year vs enrollment",
-    blurb: "Pembrolizumab · scatter",
-    request: {
-      query: "Show start year versus enrollment for pembrolizumab trials",
-      drug_name: "Pembrolizumab",
-    },
-  },
-  {
-    name: "Phase by status",
-    blurb: "NSCLC · grouped bars",
-    request: {
-      query: "Show trials grouped by phase and status for NSCLC",
-      condition: "Non-small Cell Lung Cancer",
-    },
-  },
-  {
-    name: "Drug–sponsor links",
-    blurb: "Diabetes · network",
+    name: "Drug–sponsor network",
+    blurb: "Diabetes · relationships",
     request: {
       query: "Show a network of relationships between drugs and sponsors for diabetes trials",
       condition: "Diabetes",
-    },
-  },
-  {
-    name: "Drug–investigator links",
-    blurb: "Diabetes · network",
-    request: {
-      query: "Show a network of relationships between drugs and investigators for diabetes trials",
-      condition: "Diabetes",
-    },
-  },
-  {
-    name: "Drug co-occurrence",
-    blurb: "Melanoma · drug–drug network",
-    request: {
-      query: "Show drug-to-drug co-occurrence network for melanoma trials",
-      condition: "Melanoma",
-    },
-  },
-  {
-    name: "Where trials recruit",
-    blurb: "Countries · recruiting only",
-    request: {
-      query: "Which countries have the most recruiting trials?",
-      status: "RECRUITING",
     },
   },
 ];
@@ -607,29 +551,119 @@ function renderNetwork(viz) {
   const leftIndex = new Map(leftNodes.map((n) => [n.id, n]));
   const rightIndex = new Map(rightNodes.map((n) => [n.id, n]));
 
+  const edgeSelector = (source, target) => {
+    const key = `${source}||${target}`;
+    return [...svg.querySelectorAll("path[data-edge]")].filter(
+      (el) => el.getAttribute("data-edge") === key,
+    );
+  };
+
+  const clearEdgeSelection = () => {
+    svg.querySelectorAll(".edge.is-selected, .edge-hit.is-selected").forEach((el) => {
+      el.classList.remove("is-selected");
+    });
+  };
+
+  const focusEdgeCitations = (source, target) => {
+    clearEdgeSelection();
+    const point = (viz.data || []).find((p) => p.source === source && p.target === target);
+    edgeSelector(source, target).forEach((el) => el.classList.add("is-selected"));
+    renderCitations(viz.data || [], point || { source, target, label: `${source} → ${target}` });
+    $("citations-block").open = true;
+    $("citations-block").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  };
+
+  const focusNodeCitations = (nodeId) => {
+    clearEdgeSelection();
+    const related = (viz.data || []).filter((p) => p.source === nodeId || p.target === nodeId);
+    related.forEach((p) => {
+      edgeSelector(p.source, p.target).forEach((el) => el.classList.add("is-selected"));
+    });
+    // Render only this node's edges in the citations panel.
+    const list = $("citations-list");
+    list.innerHTML = "";
+    let shownCites = 0;
+    for (const point of related) {
+      const cites = point.citations || [];
+      if (!cites.length) continue;
+      const group = document.createElement("div");
+      group.className = "cite-group";
+      const heading = document.createElement("div");
+      heading.className = "cite-group-head";
+      const bucket = point.label || `${point.source} → ${point.target}`;
+      const contributing = point.contributing_count ?? point.value ?? cites.length;
+      heading.innerHTML = `<strong>${bucket}</strong><span>${cites.length} cited · ${contributing} contributing</span>`;
+      group.appendChild(heading);
+      for (const cite of cites) {
+        shownCites += 1;
+        const div = document.createElement("div");
+        div.className = "cite";
+        div.innerHTML = `
+          <a href="${cite.url || `https://clinicaltrials.gov/study/${cite.nct_id}`}" target="_blank" rel="noopener noreferrer">${cite.nct_id}</a>
+          <p>${cite.excerpt || ""}</p>
+        `;
+        group.appendChild(div);
+      }
+      list.appendChild(group);
+    }
+    const summary = $("citations-summary");
+    if (summary) {
+      summary.textContent = `Showing citations for “${parseEntity(nodeId).name}” (${related.length} edges · ${shownCites} excerpts). Click empty chart area to show all.`;
+    }
+    $("citations-block").open = true;
+    if (!shownCites) {
+      list.innerHTML = "<p class='notes'>No citations returned for this node.</p>";
+    }
+    $("citations-block").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  };
+
+  svg.addEventListener("click", (ev) => {
+    if (ev.target === svg) {
+      clearEdgeSelection();
+      renderCitations(viz.data || []);
+    }
+  });
+
   for (const e of ranked) {
     const s = leftIndex.get(e.source);
     const t = rightIndex.get(e.target);
     if (!s || !t) continue;
     const midX = (s.x + t.x) / 2;
+    const d = `M ${s.x} ${s.y} C ${midX} ${s.y}, ${midX} ${t.y}, ${t.x} ${t.y}`;
+    const edgeKey = `${e.source}||${e.target}`;
+    const point = (viz.data || []).find((p) => p.source === e.source && p.target === e.target);
+    const citeN = point?.citations?.length || 0;
+
+    // Wide invisible stroke so thin edges are easy to click.
+    const hit = svgEl("path", {
+      class: "edge-hit",
+      d,
+      "data-edge": edgeKey,
+      "stroke-width": "14",
+    });
+    hit.style.cursor = "pointer";
+    hit.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      focusEdgeCitations(e.source, e.target);
+    });
+
     const path = svgEl("path", {
       class: `edge${e.weight >= maxW * 0.75 ? " is-strong" : ""}`,
-      d: `M ${s.x} ${s.y} C ${midX} ${s.y}, ${midX} ${t.y}, ${t.x} ${t.y}`,
+      d,
+      "data-edge": edgeKey,
       "stroke-width": (1.4 + (4.5 * e.weight) / maxW).toFixed(2),
     });
-    path.style.cursor = "pointer";
-    path.appendChild(svgEl("title")).textContent = `${parseEntity(e.source).name} → ${parseEntity(e.target).name}: ${e.weight} trials`;
-    path.addEventListener("click", () => {
-      const point = (viz.data || []).find((p) => p.source === e.source && p.target === e.target);
-      renderCitations(viz.data || [], point || e);
-      $("citations-block").open = true;
-      $("citations-block").scrollIntoView({ behavior: "smooth", block: "nearest" });
-    });
+    path.style.pointerEvents = "none";
+    const tip = `${parseEntity(e.source).name} → ${parseEntity(e.target).name}: ${e.weight} trials` +
+      (citeN ? ` · ${citeN} citation(s) — click to view` : " — click for details");
+    hit.appendChild(svgEl("title")).textContent = tip;
+    svg.appendChild(hit);
     svg.appendChild(path);
   }
 
   const drawNode = (n, side) => {
     const g = svgEl("g");
+    g.style.cursor = "pointer";
     const r = 5.5 + Math.min(7, Math.sqrt(n.weight) * 1.4);
     const color =
       n.type === "Drug" ? PALETTE[0] :
@@ -645,15 +679,21 @@ function renderNetwork(viz) {
       "text-anchor": side === "left" ? "end" : "start",
     });
     label.textContent = truncateLabel(n.name, side === "left" ? 26 : 28);
-    label.appendChild(svgEl("title")).textContent = `${n.full} (${n.weight})`;
+    label.appendChild(svgEl("title")).textContent = `${n.full} (${n.weight} linked trials) — click for NCT citations`;
     g.appendChild(label);
+    g.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      focusNodeCitations(n.id);
+    });
     svg.appendChild(g);
   };
 
   leftNodes.forEach((n) => drawNode(n, "left"));
   rightNodes.forEach((n) => drawNode(n, "right"));
 
-  caption.textContent = `Showing top ${ranked.length} relationships by shared trial count. Line thickness = number of linked trials.`;
+  caption.textContent =
+    `Showing top ${ranked.length} relationships by shared trial count. ` +
+    `Line thickness = linked trials. Click a line or node to see NCT citations below.`;
 }
 
 function renderMeta(meta) {
@@ -720,7 +760,11 @@ function renderCitations(data, focusPoint = null) {
 
     const heading = document.createElement("div");
     heading.className = "cite-group-head";
-    const bucket = [point.label ?? point.x, point.series ?? point.status].filter(Boolean).join(" · ") || "Datum";
+    const bucket =
+      point.label ||
+      (point.source && point.target ? `${point.source} → ${point.target}` : null) ||
+      [point.x, point.series ?? point.status].filter(Boolean).join(" · ") ||
+      "Datum";
     const contributing = point.contributing_count ?? point.value ?? cites.length;
     heading.innerHTML = `<strong>${bucket}</strong><span>${cites.length} cited · ${contributing} contributing</span>`;
     group.appendChild(heading);

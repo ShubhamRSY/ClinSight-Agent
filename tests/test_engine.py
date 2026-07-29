@@ -640,6 +640,34 @@ def test_compare_phases_does_not_set_spurious_condition():
     assert "cond" not in interpretation["search_params"]
 
 
+def test_drug_trend_query_does_not_set_spurious_condition():
+    """Regression: 'this drug changed' must not become query.cond (zeros CT.gov)."""
+    from app.engine.heuristics import (
+        _enrich_search_params_from_text,
+        _extract_condition_from_text,
+        _is_plausible_condition,
+    )
+    from app.engine.interpreter import _validate_interpretation
+
+    query = "How has the number of trials for this drug changed over time?"
+    assert not _is_plausible_condition("this drug changed")
+    assert _extract_condition_from_text(query) is None
+
+    interpretation = _validate_interpretation(
+        {
+            "search_params": {"intr": "Pembrolizumab", "cond": "this drug changed"},
+            "aggregation": "by_year",
+            "viz_type": "line_chart",
+            "needs_visualization": True,
+        }
+    )
+    request = QueryRequest(query=query, drug_name="Pembrolizumab")
+    _enrich_search_params_from_text(query, request, interpretation)
+    assert interpretation["search_params"].get("intr") == "Pembrolizumab"
+    assert "cond" not in interpretation["search_params"]
+
+
+
 def test_country_aliases_normalize():
     from app.engine.aggregator import normalize_country_name, countries_match
 

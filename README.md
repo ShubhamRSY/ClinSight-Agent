@@ -46,6 +46,25 @@ python main.py
 
 Demo UI: form + optional filters, Chart.js charts, SVG network graphs, deep citations, and raw JSON.
 
+### 4. Open the demo video
+
+From the repo root, open the walkthrough files in `docs/demo/`:
+
+```bash
+# macOS — open the folder in Finder
+open docs/demo/
+
+# or play the video directly
+open docs/demo/clinsight-demo.mp4
+```
+
+| File | Path |
+|------|------|
+| Demo video (MP4) | [`docs/demo/clinsight-demo.mp4`](docs/demo/clinsight-demo.mp4) |
+| Demo video (WebM) | [`docs/demo/clinsight-demo.webm`](docs/demo/clinsight-demo.webm) |
+
+On Linux use `xdg-open docs/demo/`; on Windows use `explorer docs\demo`.
+
 ---
 
 ## Demo
@@ -56,7 +75,10 @@ Local UI at [http://localhost:8000/](http://localhost:8000/) after `python main.
 
 Short walkthrough (~1 min): time-series → phase bar chart → drug–sponsor network.
 
+Navigate to the files under **`docs/demo/`**:
+
 - [docs/demo/clinsight-demo.mp4](docs/demo/clinsight-demo.mp4)
+- [docs/demo/clinsight-demo.webm](docs/demo/clinsight-demo.webm)
 
 ### Screenshots
 
@@ -282,6 +304,8 @@ Tradeoff accepted: coverage and correctness under a fetch cap beat “always com
 
 ## Tests
 
+**91 automated tests (pytest).**
+
 ```bash
 pip install -r requirements.txt
 CLINSIGHT_REFERENCE_DATE=2026-07-29 pytest
@@ -332,7 +356,7 @@ No other proprietary trial databases were used.
 
 ### How correctness was validated
 
-- Ran **`pytest`** (with `CLINSIGHT_REFERENCE_DATE=2026-07-29`) for aggregators, heuristics, citations, schemas, filters, cache, CT.gov client paging, and mocked `/api/v1/query` e2e  
+- Ran **`pytest`** — **91 automated tests** (with `CLINSIGHT_REFERENCE_DATE=2026-07-29`) for aggregators, heuristics, citations, schemas, filters, cache, CT.gov client paging, and mocked `/api/v1/query` e2e  
 - Exercised the **live API + demo UI** against ClinicalTrials.gov across real question classes (trends, phase/status, drug compare, sponsors, geo, enrollment, networks, temporal phrases)  
 - Checked that responses match the **Pydantic contract** (`visualization` + `meta`, encodings, citations with NCT URLs/excerpts) and render correctly in the UI  
 - Fixed issues found during testing (e.g. wrong chart intent, temporal year bounds, grounding/hallucination cases, post-refactor bugs)
