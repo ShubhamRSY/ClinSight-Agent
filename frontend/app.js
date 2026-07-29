@@ -730,12 +730,16 @@ function renderMeta(meta) {
   }
 
   const notes = $("viz-notes");
+  const notesBlock = $("notes-block");
   if (meta.notes) {
     notes.textContent = meta.notes;
-    notes.classList.remove("hidden");
+    if (notesBlock) {
+      notesBlock.classList.remove("hidden");
+      notesBlock.open = false; // collapsed by default — click to expand
+    }
   } else {
     notes.textContent = "";
-    notes.classList.add("hidden");
+    if (notesBlock) notesBlock.classList.add("hidden");
   }
 }
 
