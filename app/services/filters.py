@@ -18,6 +18,7 @@ from app.engine.aggregator import (
 )
 from app.schemas.input import PHASE_ALIASES, QueryRequest, normalize_phase_value, normalize_status_value
 
+# Words that mean a modality/procedure, not a drug name (for meta.filters labels).
 _MODALITY_KEYWORDS = (
     "radiation",
     "radiotherapy",
@@ -80,6 +81,8 @@ def build_start_date_advanced_filter(
     return f"AREA[StartDate]RANGE[{start},{end}]"
 
 
+# --- Post-fetch safety net: keep only studies that match structured + NL filters ---
+
 def apply_structured_filters(
     studies: list[dict],
     request: QueryRequest,
@@ -97,6 +100,7 @@ def apply_structured_filters(
     """
     filtered = studies
 
+    # Condition (skip "Drug A vs Drug B" false positives).
     condition_filter = request.condition or condition_override
     if condition_filter and re.search(r"\b(?:vs\.?|versus)\b", condition_filter, re.I):
         condition_filter = None
@@ -106,6 +110,7 @@ def apply_structured_filters(
             if study_matches_condition_filter(s, condition_filter)
         ]
 
+    # Country / site location.
     country_filter = request.country or country_override
     if country_filter:
         filtered = [
@@ -113,6 +118,7 @@ def apply_structured_filters(
             if study_matches_country_filter(s, country_filter)
         ]
 
+    # Trial phase enum match.
     if request.trial_phase:
         target = normalize_phase(request.trial_phase)
         next_studies = []
@@ -125,6 +131,7 @@ def apply_structured_filters(
         filtered = next_studies
 
     status_filter = (request.status or "").strip()
+    # Overall status (comma-lists allowed after schema normalization).
     if status_filter:
         try:
             target_status = normalize_status_value(status_filter)
@@ -139,6 +146,7 @@ def apply_structured_filters(
         filtered = next_studies
 
     sponsor_needle = (request.sponsor or sponsor_override or "").strip().lower()
+    # Lead sponsor substring match (request wins, else NL override).
     if sponsor_needle:
         filtered = [
             s for s in filtered
@@ -147,6 +155,7 @@ def apply_structured_filters(
             ).lower()
         ]
 
+    # Start/end year (+ optional month) from structured request or NL interpretation.
     start_yr = request.start_year if request.start_year is not None else start_year_override
     end_yr = request.end_year if request.end_year is not None else end_year_override
     if start_yr is not None or end_yr is not None or start_month_override is not None:

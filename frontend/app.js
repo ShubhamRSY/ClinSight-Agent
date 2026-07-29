@@ -7,6 +7,7 @@
  * Click a mark to focus that datum's deep citations (nct_id + excerpt).
  */
 
+// --- Example chips: one-click demos for graders ---
 const EXAMPLES = [
   {
     name: "Trials over time",
@@ -56,6 +57,7 @@ const EXAMPLES = [
     },
   },
 ];
+// --- Form field ids mirrored into the POST /api/v1/query body ---
 const FIELDS = [
   "query",
   "drug_name",
@@ -69,6 +71,7 @@ const FIELDS = [
   "max_studies",
 ];
 
+// --- Chart color palette (clinical green family) ---
 const PALETTE = ["#0f6b5c", "#1f4e79", "#b45309", "#5b4b8a", "#0e7490", "#3f6212", "#9f1239", "#365314"];
 
 let chartInstance = null;
@@ -82,6 +85,7 @@ function setVisible(el, visible) {
   el.classList.toggle("hidden", !visible);
 }
 
+// --- Populate the form from an example (or clear) ---
 function fillForm(request) {
   for (const key of FIELDS) {
     const el = $(key);
@@ -95,6 +99,7 @@ function fillForm(request) {
   }
 }
 
+// --- Read form → JSON body for POST /api/v1/query ---
 function readPayload() {
   const payload = {};
   for (const key of FIELDS) {
@@ -168,6 +173,7 @@ function parseEntity(raw) {
   return { type: "Entity", name: text, full: text };
 }
 
+// --- Pie helper: collapse tiny slices into "Other" ---
 function preparePieSlices(viz, encoding) {
   const xField = fieldFromEncoding(encoding, "x", "label");
   const yField = fieldFromEncoding(encoding, "y", "value");
@@ -203,6 +209,7 @@ function preparePieSlices(viz, encoding) {
   return { rows: major, total: major.reduce((s, r) => s + r.value, 0) || 1 };
 }
 
+// --- Chart.js configs per viz type ---
 function buildPieConfig(viz, encoding) {
   const { rows, total } = preparePieSlices(viz, encoding);
   const labels = rows.map((r) => r.label);
@@ -353,6 +360,7 @@ function buildScatterConfig(viz, encoding) {
   };
 }
 
+// --- Pick Chart.js config from visualization.type ---
 function buildChartConfig(response) {
   const { visualization: viz } = response;
   const encoding = viz.encoding || {};
@@ -483,6 +491,7 @@ function svgEl(name, attrs = {}) {
   return el;
 }
 
+// --- SVG bipartite network: edges = relationships, click → citations ---
 function renderNetwork(viz) {
   const svg = $("network");
   const canvas = $("chart");
@@ -696,6 +705,7 @@ function renderNetwork(viz) {
     `Line thickness = linked trials. Click a line or node to see NCT citations below.`;
 }
 
+// --- Meta chips under the chart (source, grouping, truncation, filters) ---
 function renderMeta(meta) {
   const row = $("meta-row");
   row.innerHTML = "";
@@ -729,6 +739,7 @@ function renderMeta(meta) {
   }
 }
 
+// --- Deep citations panel (all marks, or focused mark after click) ---
 function renderCitations(data, focusPoint = null) {
   const list = $("citations-list");
   list.innerHTML = "";
@@ -798,6 +809,7 @@ function renderCitations(data, focusPoint = null) {
   }
 }
 
+// --- Chart.js click → focus citations for that bar/slice ---
 function attachCitationClick(chart, viz) {
   chart.options.onClick = (_event, elements) => {
     if (!elements.length) {
@@ -844,6 +856,7 @@ function destroyChart() {
   }
 }
 
+// --- Orchestrate: title + meta + citations + chart or network ---
 function renderResponse(response) {
   const viz = response.visualization;
   const wrap = $("chart-wrap");
@@ -886,6 +899,7 @@ function renderResponse(response) {
   showState({ viz: true });
 }
 
+// --- Submit button: call API, render or show error ---
 async function runQuery() {
   const payload = readPayload();
   if (!payload.query) {
@@ -969,6 +983,7 @@ async function copyRawJson() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Wire example chips, form submit, clear, and copy-JSON once the DOM is ready.
   renderExamples();
   $("query-form").addEventListener("submit", (e) => {
     e.preventDefault();

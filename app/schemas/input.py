@@ -8,6 +8,7 @@ from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
+# --- CT.gov overallStatus allow-list + friendly aliases ---
 VALID_STATUSES = frozenset(
     {
         "RECRUITING",
@@ -44,6 +45,7 @@ STATUS_ALIASES = {
     "unknown": "UNKNOWN",
 }
 
+# --- CT.gov phase allow-list + friendly aliases ---
 VALID_PHASES = frozenset(
     {
         "PHASE1",
@@ -83,6 +85,8 @@ _STATUS_HINT = (
 _PHASE_HINT = "Phase 1, Phase 2, Phase 3, Phase 4, Early Phase 1, or NA"
 
 
+# Map aliases → enum; reject unknown statuses before any upstream call.
+
 def normalize_status_value(value: str) -> str:
     """Normalize a single status token to a CT.gov enum, or raise ValueError."""
     raw = (value or "").strip()
@@ -99,6 +103,8 @@ def normalize_status_value(value: str) -> str:
         f"Invalid status '{raw}'. Use one of: {_STATUS_HINT}."
     )
 
+
+# Map aliases → PHASE1… / EARLY_PHASE1 / NA.
 
 def normalize_phase_value(value: str) -> str:
     """Normalize a phase string to a CT.gov enum, or raise ValueError."""
@@ -133,6 +139,8 @@ def _empty_to_none(value: Optional[str]) -> Optional[str]:
     stripped = value.strip()
     return stripped or None
 
+
+# --- POST /api/v1/query body (extra=forbid → unknown fields = 422) ---
 
 class QueryRequest(BaseModel):
     """POST /api/v1/query body: NL question plus optional structured filters."""

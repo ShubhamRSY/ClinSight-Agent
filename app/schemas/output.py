@@ -15,6 +15,8 @@ from typing import Any, Optional
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
+# --- Allowed visualization.type values ---
+
 class VizType(str, Enum):
     bar_chart = "bar_chart"
     grouped_bar_chart = "grouped_bar_chart"
@@ -45,6 +47,8 @@ class ChannelEncoding(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+# --- Deep citation: NCT id + URL + field-path excerpt ---
+
 class Citation(BaseModel):
     """Traceability link from a chart mark back to a ClinicalTrials.gov study."""
 
@@ -64,6 +68,8 @@ class Citation(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
+
+# --- One chart mark (bar / slice / point / network edge) ---
 
 class DataPoint(BaseModel):
     """One rendered mark (bar, slice, point, or network edge).
@@ -103,6 +109,8 @@ class DataPoint(BaseModel):
         return value
 
 
+# --- Vega-lite-style channel bindings the frontend reads ---
+
 class Encoding(BaseModel):
     """Channel map telling the frontend which DataPoint fields to plot."""
 
@@ -116,6 +124,8 @@ class Encoding(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
+
+# --- Honesty + provenance (filters, truncation, notes) ---
 
 class Metadata(BaseModel):
     """Response metadata for chrome, chips, and truncation honesty."""
@@ -145,6 +155,8 @@ class Metadata(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+# --- Chart payload: type + title + encoding + data[] ---
+
 class VisualizationSpec(BaseModel):
     type: VizType = Field(..., description="Chart renderer to use")
     title: str = Field(..., description="Human-readable chart title", min_length=1)
@@ -153,6 +165,8 @@ class VisualizationSpec(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
+
+# --- Top-level API response: visualization + meta ---
 
 class VisualizationResponse(BaseModel):
     """Top-level assignment contract: visualization + meta."""

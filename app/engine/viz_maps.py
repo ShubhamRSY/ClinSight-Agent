@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from typing import Optional
 
+# --- Allow-listed aggregation names (router clamps LLM to this set) ---
 VALID_AGGREGATIONS = {
     "by_year",
     "by_phase",
@@ -31,6 +32,7 @@ VALID_AGGREGATIONS = {
     "drug_drug_network",
 }
 
+# --- Default chart type per aggregation ---
 DEFAULT_VIZ_TYPE = {
     "by_year": "time_series",
     "by_phase": "bar_chart",
@@ -54,6 +56,7 @@ DEFAULT_VIZ_TYPE = {
     "drug_drug_network": "network_graph",
 }
 
+# --- Which data fields bind to x / y for each aggregation ---
 FIELD_LABELS = {
     "by_year": ("year", "trial_count"),
     "by_phase": ("phase", "trial_count"),
@@ -132,6 +135,8 @@ _NETWORK_AGGREGATIONS = frozenset({
     "drug_drug_network",
 })
 
+
+# --- Resolve final viz type (networks/scatters forced; pie only when eligible) ---
 
 def resolve_viz_type(aggregation: str, requested: Optional[str] = None) -> str:
     """Pick a viz type from aggregation (+ optional LLM request)."""

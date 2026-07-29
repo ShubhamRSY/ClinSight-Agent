@@ -13,6 +13,7 @@ from app.config import OPENAI_API_KEY, OPENAI_MODEL
 from app.engine.interpreter import LLMServiceError
 from app.engine.labels import resolve_title_and_notes
 
+# --- Prompt: title/notes only — never invent numeric counts ---
 VIZ_CLASSIFIER_PROMPT = """You are a visualization designer for clinical trials data. Given a user's question, the query interpretation, and aggregated data, produce the final visualization specification.
 
 Return JSON with:
@@ -30,6 +31,8 @@ When the data includes year labels, the title's year span must match the min/max
 Output ONLY valid JSON."""
 
 
+# --- Second LLM stage: polish title/notes, then ground via labels.py ---
+
 async def classify_visualization(
     query: str,
     interpretation: dict,
@@ -45,6 +48,7 @@ async def classify_visualization(
     """Ask the LLM for title/notes only; fall back to grounded templates on failure."""
     client = AsyncOpenAI(api_key=OPENAI_API_KEY)
 
+    # Do not send internal _study_ids to the model.
     # Strip internal citation ids before sending to the LLM.
     safe_rows = []
     for row in aggregated_data[:20]:

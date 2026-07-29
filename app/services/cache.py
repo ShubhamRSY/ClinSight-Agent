@@ -23,12 +23,14 @@ class QueryResponseCache:
 
     @staticmethod
     def cache_key(request: QueryRequest) -> str:
+        """Build a stable hash of the full request body (same filters → same key)."""
         payload = request.model_dump(mode="json", exclude_none=True)
-        # Stable key independent of dict insertion order.
+        # Sort keys so dict order never changes the cache key.
         blob = json.dumps(payload, sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(blob.encode("utf-8")).hexdigest()
 
     def get(self, request: QueryRequest) -> Optional[VisualizationResponse]:
+        """Return cached VisualizationResponse if still within TTL."""
         if self.ttl_seconds <= 0:
             return None
         key = self.cache_key(request)
@@ -38,31 +40,36 @@ class QueryResponseCache:
             if not item:
                 return None
             expires_at, value = item
+            # Expired → drop and miss.
             if expires_at < now:
                 self._store.pop(key, None)
                 return None
             return value
 
     def set(self, request: QueryRequest, response: VisualizationResponse) -> None:
+        """Store response; evict expired/oldest entries when at capacity."""
         if self.ttl_seconds <= 0:
             return
         key = self.cache_key(request)
         expires_at = time.monotonic() + self.ttl_seconds
         with self._lock:
             if len(self._store) >= self.max_entries:
-                # Drop expired first, then oldest insertion.
+                # Prefer dropping expired entries first…
                 now = time.monotonic()
                 expired = [k for k, (exp, _) in self._store.items() if exp < now]
                 for k in expired:
                     self._store.pop(k, None)
+                # …then oldest insertion order until under the cap.
                 while len(self._store) >= self.max_entries:
                     self._store.pop(next(iter(self._store)))
             self._store[key] = (expires_at, response)
 
     def clear(self) -> None:
+        """Wipe the cache (tests / admin)."""
         with self._lock:
             self._store.clear()
 
     def stats(self) -> dict[str, Any]:
+        """Tiny introspection for debugging."""
         with self._lock:
             return {"entries": len(self._store), "ttl_seconds": self.ttl_seconds}

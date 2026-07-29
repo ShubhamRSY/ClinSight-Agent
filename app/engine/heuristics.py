@@ -26,6 +26,7 @@ _VAGUE_QUERY_MESSAGE = (
     "or ask for an explicit overview like 'distribution of trial statuses'."
 )
 
+# --- Lexicons: intent markers, overview phrases, known conditions ---
 _TRIAL_INTENT_MARKERS = (
     "trial",
     "trials",
@@ -72,6 +73,7 @@ _UNFILTERED_OVERVIEW_PHRASES = (
     "overview of trials",
 )
 
+# Known disease keywords → canonical CT.gov-friendly names (longest first).
 _CONDITION_KEYWORDS: list[tuple[str, str]] = sorted(
     [
         ("non-small cell lung cancer", "Non-small Cell Lung Cancer"),
@@ -93,6 +95,7 @@ _CONDITION_KEYWORDS: list[tuple[str, str]] = sorted(
     reverse=True,
 )
 
+# Suffixes that often mark drug names (used to avoid treating drugs as conditions).
 _DRUG_LIKE_SUFFIXES = (
     "mab",
     "nib",
@@ -188,6 +191,8 @@ def _subtract_months(ref: date, months: int) -> tuple[int, int]:
         year -= 1
     return year, month
 
+
+# --- Temporal NL → start_year / end_year / start_month ---
 
 def _extract_temporal_bounds(text: str) -> tuple[int | None, int | None, int | None]:
     """Extract (start_year, end_year, start_month) from temporal phrases in text."""
@@ -319,6 +324,8 @@ def _looks_like_drug_name(part: str) -> bool:
     return True
 
 
+# --- Drug A vs Drug B extraction ---
+
 def _extract_compared_drugs(text: str) -> list[str]:
     """Extract Drug A / Drug B from explicit 'compare phases for A vs B' phrasing."""
     raw = (text or "").strip()
@@ -368,6 +375,8 @@ def _is_early_late_phase_comparison(query: str) -> bool:
     )
 
 
+# --- Grounding helpers: is this entity really in the user text? ---
+
 def _entity_mentioned_in_text(query: str, entity: str) -> bool:
     """True if entity tokens appear in the query text."""
     q = (query or "").lower()
@@ -411,6 +420,7 @@ def _is_drug_comparison_query(text: str) -> bool:
 
 # Tokens that appear in questions but are not disease names. Rejects fragments
 # like "this drug changed" scraped from "…for this drug changed over time?".
+# --- Anti-hallucination: reject query-fragment "conditions" ---
 _CONDITION_STOPWORDS = frozenset({
     "a", "an", "the", "this", "that", "these", "those", "for", "of", "in", "on",
     "by", "with", "and", "or", "to", "from", "about", "across", "between",
@@ -494,6 +504,8 @@ def _extract_sponsor_from_text(text: str) -> str | None:
     return None
 
 
+# --- Strip LLM-invented filters that would poison the CT.gov search ---
+
 def _strip_hallucinated_drugs(query: str, request: QueryRequest, interpretation: dict) -> None:
     """Remove LLM-invented drug filters not grounded in the query or structured request."""
     if request.drug_name:
@@ -554,6 +566,8 @@ def _strip_ungrounded_entities(query: str, request: QueryRequest, interpretation
     interpretation["search_params"] = params
 
 
+# --- Fill cond/sponsor from text; never keep ungrounded LLM cond ---
+
 def _enrich_search_params_from_text(
     query: str,
     request: QueryRequest,
@@ -590,6 +604,8 @@ def _enrich_search_params_from_text(
     # Admit only entities grounded in query text or structured request fields.
     _strip_ungrounded_entities(query, request, interpretation)
 
+
+# --- Intent table: map question class → aggregation + viz_type ---
 
 def _resolve_aggregation_intent(
     query: str,
@@ -705,6 +721,8 @@ def _resolve_aggregation_intent(
 
     return None
 
+
+# --- Post-LLM glue: apply temporal + intent + compared drugs ---
 
 def _apply_query_heuristics(query: str, result: dict) -> dict:
     """

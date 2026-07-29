@@ -206,6 +206,7 @@ async def query_clinical_trials(request: QueryRequest):
     x_type, y_type = get_field_types(aggregation)
     series_field = get_series_field(aggregation)
 
+    # Record which filters actually shaped the chart (for UI chips + label grounding).
     # Meta.filters mirrors what actually shaped the chart (for UI + grounding).
     filters_applied: dict = {}
     if focus_drugs:
@@ -287,5 +288,6 @@ async def query_clinical_trials(request: QueryRequest):
         total_available=total_available,
         truncated=truncated,
     )
+    # Cache successful responses for identical requests (demo latency).
     query_response_cache.set(request, response)
     return response

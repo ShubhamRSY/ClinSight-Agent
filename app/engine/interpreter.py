@@ -18,6 +18,7 @@ from app.engine.heuristics import (
     _allows_unfiltered_overview,
     _apply_query_heuristics,
     _coerce_year,
+    # Ground condition/sponsor from text; drop invented cond/locn/term.
     _enrich_search_params_from_text,
     _extract_compared_drugs,
     _extract_condition_from_text,
@@ -39,7 +40,7 @@ class LLMServiceError(Exception):
     """Raised when the OpenAI call fails in a user-visible way."""
 
     def __init__(self, message: str, status_code: int = 502):
-        """init."""
+        """Attach an HTTP-ish status for the router to map to HTTPException."""
         super().__init__(message)
         self.status_code = status_code
 
@@ -48,11 +49,12 @@ class QueryInterpretationError(Exception):
     """Raised when the query cannot be mapped to a scoped clinical-trials search."""
 
     def __init__(self, message: str):
-        """init."""
+        """Always surfaces as HTTP 422 (unprocessable / vague query)."""
         super().__init__(message)
         self.status_code = 422
 
 
+# --- Prompt: teach the model enums + "never invent filters" ---
 INTERPRETER_SYSTEM_PROMPT = """You are a clinical trial query interpreter. Analyze the user's question and extract structured search parameters.
 
 This is a visualization system for clinical trials on ClinicalTrials.gov.
@@ -128,6 +130,8 @@ Selection guidance:
 Output ONLY a valid JSON object, no other text."""
 
 
+# --- Gate: refuse gibberish / unscoped "fetch everything" queries ---
+
 def validate_actionable_query(
     query: str,
     request: QueryRequest,
@@ -156,6 +160,8 @@ def validate_actionable_query(
 
     raise QueryInterpretationError(_VAGUE_QUERY_MESSAGE)
 
+
+# --- Clamp LLM JSON to allow-listed aggregations, viz types, status enums ---
 
 def _validate_interpretation(result: dict) -> dict:
     """Constrain LLM output to known enums to avoid hallucination-prone free text."""
@@ -234,6 +240,8 @@ def _validate_interpretation(result: dict) -> dict:
     }
 
 
+# --- Main entry: OpenAI call → validate → heuristics → structured overrides ---
+
 async def interpret_query(request: QueryRequest) -> dict:
     """
     NL question → search params + aggregation.
@@ -247,6 +255,7 @@ async def interpret_query(request: QueryRequest) -> dict:
     user_message = f"Query: {request.query}\n"
     if request.drug_name:
         user_message += f"Drug/Intervention: {request.drug_name}\n"
+    # Structured request fields always win over NL/LLM extraction.
     if request.condition:
         user_message += f"Condition: {request.condition}\n"
     if request.trial_phase:
@@ -283,6 +292,7 @@ async def interpret_query(request: QueryRequest) -> dict:
     except (APIError, json.JSONDecodeError) as exc:
         raise LLMServiceError(f"OpenAI interpretation failed: {exc}", 502) from exc
 
+    # Deterministic enrichment (temporal bounds, intent, strip hallucinations).
     interpretation = _apply_query_heuristics(request.query, _validate_interpretation(result))
     _enrich_search_params_from_text(request.query, request, interpretation)
     # Explicit structured request fields always win over NL/LLM extraction
@@ -310,5 +320,6 @@ async def interpret_query(request: QueryRequest) -> dict:
     if request.trial_phase:
         # Keep structured phase on the interpretation for downstream notes/filters.
         interpretation["trial_phase"] = request.trial_phase
+    # Final gate before any CT.gov fetch.
     validate_actionable_query(request.query, request, interpretation)
     return interpretation

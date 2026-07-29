@@ -53,11 +53,14 @@ from app.engine.study_fields import (  # noqa: F401
     _format_status,
 )
 
+# --- Limits: how many NCT ids we keep per bucket for citations ---
 CITATION_SAMPLE_SIZE = 8
 DEFAULT_TOP_N = 15
 NETWORK_TOP_N = 25
 NETWORK_ENTITY_LIMIT = 3
 SCATTER_POINT_LIMIT = 80
+
+# --- Simple categorical / time buckets (one mark per key) ---
 
 def aggregate_by_year(studies: list[dict]) -> list[dict]:
     """Count trials by start year; attach sample NCT ids for citations."""
@@ -205,6 +208,8 @@ def aggregate_by_drug(studies: list[dict], top_n: int = DEFAULT_TOP_N) -> list[d
     return result
 
 
+# --- Cross-tabs (phase × status / phase × drug) ---
+
 def aggregate_phase_by_status(studies: list[dict]) -> list[dict]:
     """Grouped phase × status trial counts."""
     buckets: dict[tuple[str, str], list[dict]] = defaultdict(list)
@@ -234,6 +239,8 @@ _ENROLLMENT_BINS = [
     (5001, 10**9, "5000+"),
 ]
 
+
+# --- Enrollment size bins & early/mid/late phase groups ---
 
 def _enrollment_bin_label(enrollment: int) -> str | None:
     """Map enrollment size to a histogram bin label."""
@@ -436,6 +443,8 @@ def aggregate_phase_by_drug(
     return result
 
 
+# --- Relationship networks: weighted co-occurrence edges ---
+
 def aggregate_entity_network(
     studies: list[dict],
     mode: str = "drug_sponsor",
@@ -505,6 +514,7 @@ def aggregate_entity_network(
         })
     return result
 
+# Map aggregation name → callable that returns chart rows.
 AGGREGATORS = {
     "by_year": aggregate_by_year,
     "by_phase": aggregate_by_phase,
@@ -529,6 +539,8 @@ AGGREGATORS = {
 }
 
 
+
+# --- Entrypoint used by the router: dispatch by aggregation name ---
 
 def aggregate_studies(
     studies: list[dict],

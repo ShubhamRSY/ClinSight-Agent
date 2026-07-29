@@ -16,8 +16,10 @@ import uvicorn
 
 from app.routers.query import router as query_router
 
+# Path to the interactive demo (HTML/JS/CSS).
 FRONTEND_DIR = Path(__file__).resolve().parent / "frontend"
 
+# Create the FastAPI application.
 app = FastAPI(
     title="ClinSight Agent",
     description=(
@@ -32,6 +34,8 @@ app.include_router(query_router)
 # Demo assets (JS/CSS) served from ./frontend
 app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
 
+
+# --- Routes: demo UI + health (API lives on the query router) ---
 
 @app.get("/")
 async def demo():

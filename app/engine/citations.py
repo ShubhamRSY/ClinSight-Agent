@@ -23,6 +23,8 @@ from app.schemas.output import Citation
 CTGOV_STUDY_URL = "https://clinicaltrials.gov/study/{nct_id}"
 
 
+# --- Small field readers from CT.gov protocol JSON ---
+
 def study_url(nct_id: str) -> str:
     """Canonical ClinicalTrials.gov study page URL."""
     return CTGOV_STUDY_URL.format(nct_id=(nct_id or "").strip())
@@ -124,6 +126,8 @@ def _format_phase_api(phases: list[str]) -> str:
     return f"designModule.phases={phases!r}"
 
 
+# --- Matching helpers (never fall back to values[0]) ---
+
 def _exact_match(values: list[str], target: str, *, normalize=None) -> Optional[str]:
     """Return a grounded match only — never fall back to values[0]."""
     needle = (target or "").strip()
@@ -172,6 +176,8 @@ def _make_citation(nct_id: str, excerpt: str) -> Citation:
     """Build a Citation model with nct_id, url, and excerpt."""
     return Citation(nct_id=nct_id, url=study_url(nct_id), excerpt=excerpt)
 
+
+# --- Build a field-path excerpt that justifies this study in the datum ---
 
 def build_supporting_excerpt(
     study: dict,
@@ -306,6 +312,8 @@ def build_supporting_excerpt(
 
     return " | ".join(parts) if parts else f"identificationModule.nctId={nct or 'unknown'}"
 
+
+# --- Sample of NCT citations attached to one chart mark ---
 
 def citations_for_datum(
     study_ids: list[str],

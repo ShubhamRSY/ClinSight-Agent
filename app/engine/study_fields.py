@@ -10,6 +10,8 @@ import re
 from typing import Optional
 
 
+# --- Generic nested JSON path readers ---
+
 def extract_field(study: dict, *path: str) -> Optional[str]:
     """Walk nested protocol JSON path; return a scalar string or None."""
     section = study.get("protocolSection", {})
@@ -61,6 +63,8 @@ def extract_date_parts(study: dict, *path) -> tuple[Optional[int], Optional[int]
     except ValueError:
         return (None, None)
 
+
+# --- Typed getters used by aggregators / filters / citations ---
 
 def get_nct_id(study: dict) -> str:
     """NCT identifier for a study."""
@@ -118,6 +122,8 @@ def get_enrollment(study: dict) -> Optional[int]:
     except (TypeError, ValueError):
         return None
 
+
+# --- Interventions: keep drugs, drop procedures/devices/placebos ---
 
 def get_drugs(study: dict, limit: int = 3) -> list[str]:
     """Drug-like intervention names (filters out non-drugs)."""
@@ -217,6 +223,8 @@ def _looks_like_non_drug_name(name: str) -> bool:
     return any(n in lower for n in needles)
 
 
+# --- Canonical names for matching (case/spacing/synonyms) ---
+
 def normalize_drug_name(name: str) -> str:
     """Collapse whitespace and case so 'pembrolizumab' and 'Pembrolizumab' group together."""
     cleaned = " ".join(str(name or "").strip().split())
@@ -288,6 +296,8 @@ def _condition_normalize_key(name: str) -> str:
     n = " ".join(n.lower().split())
     return n
 
+
+# --- Condition synonyms (e.g. NSCLC → Non-small Cell Lung Cancer) ---
 
 def normalize_condition_name(name: str) -> str:
     """Return a canonical display name for a condition."""
@@ -396,6 +406,8 @@ COUNTRY_ALIASES = {
     "uae": "United Arab Emirates",
 }
 
+
+# --- Country aliases (usa → United States) ---
 
 def normalize_country_name(name: str) -> str:
     """Map common aliases to CT.gov country labels; otherwise title-case lightly."""

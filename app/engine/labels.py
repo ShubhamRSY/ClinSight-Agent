@@ -73,6 +73,8 @@ def _year_span_from_data(aggregated_data: list[dict]) -> Optional[str]:
     return str(lo) if lo == hi else f"{lo}–{hi}"
 
 
+# --- Deterministic titles/notes when LLM text is missing or ungrounded ---
+
 def build_template_title(
     aggregation: str,
     filters: dict,
@@ -135,6 +137,8 @@ def allowed_entities_from_filters(filters: dict) -> set[str]:
     return allowed
 
 
+# --- Reject LLM titles that invent drugs/conditions not in filters ---
+
 def text_mentions_ungrounded_entity(text: str, filters: dict) -> bool:
     """
     Heuristic: flag likely invented proper entities in free text.
@@ -172,6 +176,8 @@ def text_mentions_ungrounded_entity(text: str, filters: dict) -> bool:
     return False
 
 
+# --- Prefer grounded LLM labels; otherwise templates ---
+
 def resolve_title_and_notes(
     *,
     llm_title: Optional[str],
@@ -199,6 +205,8 @@ def resolve_title_and_notes(
 
     return title, notes
 
+
+# --- Encoding always from aggregation maps (LLM never sets axes) ---
 
 def build_deterministic_encoding(
     *,

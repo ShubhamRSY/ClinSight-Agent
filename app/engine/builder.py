@@ -29,6 +29,8 @@ def _build_study_map(studies: list[dict]) -> dict[str, dict]:
     }
 
 
+# --- Turn aggregator rows into frontend DataPoint marks (+ citations) ---
+
 def build_data_points(
     aggregated_data: list[dict],
     x_field: str,
@@ -66,6 +68,7 @@ def build_data_points(
             datum=row,
         )
 
+        # Network edges use source/target/edge_weight channels.
         if viz_type == "network_graph":
             source = row.get("source")
             target = row.get("target")
@@ -82,6 +85,7 @@ def build_data_points(
                 citations=citations,
                 **extra_fields,
             )
+        # Scatter uses x/y (+ optional size).
         elif viz_type == "scatter_plot":
             dp = DataPoint(
                 label=str(row.get("label") or row.get(x_field, "")),
@@ -108,6 +112,8 @@ def build_data_points(
         points.append(dp)
     return points
 
+
+# --- Final VisualizationResponse: encoding + meta + honest truncation notes ---
 
 def build_response(
     aggregated_data: list[dict],
@@ -142,6 +148,7 @@ def build_response(
         aggregation=aggregation,
     )
 
+    # Append citation + truncation honesty into meta.notes.
     cited = sum(1 for p in data_points if p.citations)
     citation_note = (
         f"Deep citations attached to {cited}/{len(data_points)} data points "
@@ -173,6 +180,7 @@ def build_response(
         y=ChannelEncoding(field=y_field, type=FieldType(y_type)),
     )
     # Fill optional network/scatter fields if the caller omitted them.
+    # Ensure network/scatter optional encoding channels exist.
     if viz_type == "network_graph":
         enc.source = enc.source or ChannelEncoding(field="source", type=FieldType.nominal)
         enc.target = enc.target or ChannelEncoding(field="target", type=FieldType.nominal)

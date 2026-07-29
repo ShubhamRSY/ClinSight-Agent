@@ -21,6 +21,8 @@ from app.config import (
 from app.schemas.input import VALID_PHASES, VALID_STATUSES
 
 
+# --- Error type the router maps to HTTP 429/502/504 ---
+
 class ClinicalTrialsAPIError(Exception):
     """Raised when ClinicalTrials.gov returns an unexpected failure."""
 
@@ -45,6 +47,8 @@ def _retry_after_seconds(response: httpx.Response, attempt: int) -> float:
 VALID_CT_STATUSES = VALID_STATUSES
 VALID_CT_PHASES = VALID_PHASES
 
+
+# --- Async client: connection reuse + resilient paging ---
 
 class ClinicalTrialsClient:
     """Async ClinicalTrials.gov v2 client with connection reuse and resilient paging."""
@@ -85,6 +89,7 @@ class ClinicalTrialsClient:
     async def __aexit__(self, *args) -> None:
         await self.aclose()
 
+    # Translate our search dict into CT.gov v2 query/filter query-string params.
     def _build_params(
         self,
         *,
@@ -116,6 +121,7 @@ class ClinicalTrialsClient:
             params["query.lead"] = lead
         if spons:
             params["query.spons"] = spons
+        # Status allow-list (reject ALL / garbage enums).
         if status:
             normalized = status.upper().replace(" ", "_")
             # CT.gov rejects invalid enums like ALL; only forward known statuses.
@@ -124,6 +130,7 @@ class ClinicalTrialsClient:
             if kept:
                 params["filter.overallStatus"] = ",".join(kept)
 
+        # Phase via filter.advanced AREA[Phase]… (filter.phase is rejected by live API).
         # Phase: live CT.gov v2 no longer accepts filter.phase (returns 400
         # "unknown parameter"). Use Essie AREA[Phase] inside filter.advanced.
         phase_expr: Optional[str] = None
@@ -164,6 +171,7 @@ class ClinicalTrialsClient:
             params["countTotal"] = "true"
         return params
 
+    # GET with retries on 429/5xx and timeouts.
     async def _get_json(self, path: str, params: dict) -> dict:
         last_error: Exception | None = None
         # Extra attempts for rate limits beyond the configured retry budget.
@@ -228,6 +236,7 @@ class ClinicalTrialsClient:
         page_token: Optional[str] = None,
         count_total: bool = True,
     ) -> dict:
+        """Single page of /studies (caller may pass pageToken for paging)."""
         params = self._build_params(
             term=term,
             cond=cond,
@@ -262,7 +271,7 @@ class ClinicalTrialsClient:
         max_studies: Optional[int] = None,
     ) -> dict:
         """
-        Follow nextPageToken until exhausted or max_studies is reached.
+        Walk nextPageToken until exhausted or max_studies is reached.
 
         Returns:
           {
@@ -278,6 +287,7 @@ class ClinicalTrialsClient:
         total_count: Optional[int] = None
         page_token: Optional[str] = None
 
+        # Page until we hit the fetch cap or CT.gov runs out of tokens.
         while len(studies) < limit:
             page_size = min(self.page_size, limit - len(studies))
             payload = await self.search_studies(
@@ -307,6 +317,7 @@ class ClinicalTrialsClient:
             # Gentle pacing between pages to reduce rate-limit hits.
             await asyncio.sleep(CT_PAGE_PAUSE_SECONDS)
 
+        # truncated=True when more matching studies exist than we fetched.
         truncated = bool(
             page_token
             or (total_count is not None and len(studies) < total_count)
@@ -323,10 +334,12 @@ class ClinicalTrialsClient:
         }
 
     async def get_study(self, nct_id: str, fields: Optional[str] = None) -> dict:
+        """Fetch one study by NCT id (optional field projection)."""
         params = {}
         if fields:
             params["fields"] = fields
         return await self._get_json(f"/studies/{nct_id}", params)
 
     async def get_stats(self) -> dict:
+        """CT.gov corpus size stats (diagnostics)."""
         return await self._get_json("/stats/size", {})

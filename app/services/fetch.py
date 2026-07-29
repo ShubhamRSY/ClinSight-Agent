@@ -18,6 +18,7 @@ from app.schemas.input import QueryRequest
 from app.services.filters import build_start_date_advanced_filter, normalize_phase
 
 # Aggregations that need historical coverage (avoid newest-first sort bias).
+# --- Caps & pauses tuned for real-world CT.gov rate limits ---
 TREND_AGGREGATIONS = frozenset({"by_year", "year_enrollment_scatter"})
 TREND_FETCH_CAP = 5000
 TREND_PER_YEAR_CAP = 5000
@@ -26,6 +27,7 @@ YEAR_BUCKET_PAUSE_SECONDS = 0.25
 MULTI_DRUG_PAUSE_SECONDS = 0.75
 
 # Only request fields we actually aggregate / cite (keeps payloads smaller).
+# --- Only the protocol fields we aggregate or cite (smaller payloads) ---
 STUDY_FIELDS = (
     "protocolSection.identificationModule.nctId",
     "protocolSection.identificationModule.briefTitle",
@@ -63,6 +65,8 @@ def trend_end_year(effective_end: Optional[int]) -> int:
         return effective_end
     return get_reference_date().year + 1
 
+
+# --- Strategy A: one fetch per calendar year (fair long trends) ---
 
 async def fetch_studies_year_bucketed(
     ct_client: ClinicalTrialsClient,
@@ -107,6 +111,8 @@ async def fetch_studies_year_bucketed(
         "truncated": any_truncated,
     }
 
+
+# --- Strategy router: multi-drug merge | year buckets | default pagination ---
 
 async def fetch_studies_for_query(
     ct_client: ClinicalTrialsClient,
