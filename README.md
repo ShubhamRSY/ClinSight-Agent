@@ -290,6 +290,67 @@ Saved fixtures: [`examples/example_queries.json`](examples/example_queries.json)
 
 ## Architecture
 
+### End-to-end query flow
+
+How one question moves from **ingestion → processing → output**:
+
+```mermaid
+flowchart TD
+  subgraph Ingest["1. Ingestion"]
+    UI["Demo UI or client<br/>POST /api/v1/query"]
+    Schema["Pydantic QueryRequest<br/>validate filters · extra=forbid"]
+    Cache{"Response cache hit?"}
+  end
+
+  subgraph Interpret["2. Interpret & ground"]
+    LLM1["OpenAI interpreter<br/>search params · aggregation · viz hint"]
+    Clamp["Enum clamp<br/>allow-listed aggregations / statuses"]
+    Heur["Heuristics<br/>temporal bounds · intent routing<br/>strip ungrounded entities"]
+    Override["Structured filters win<br/>drug / condition / country / years"]
+  end
+
+  subgraph Fetch["3. Fetch live trials"]
+    Strat{"Fetch strategy"}
+    Year["Year-bucketed fetch<br/>fair long trends"]
+    Multi["Multi-drug merge<br/>Drug A vs Drug B"]
+    Page["Paginated CT.gov v2<br/>retries · rate-limit pacing"]
+  end
+
+  subgraph Process["4. Process & aggregate"]
+    Local["Local post-filters<br/>status · phase · sponsor · country · years"]
+    Agg["Deterministic aggregator<br/>counts / edge weights<br/>NEVER from LLM"]
+    Enc["viz_maps encoding<br/>x / y / series channels"]
+  end
+
+  subgraph Present["5. Present & cite"]
+    LLM2["OpenAI classifier<br/>title + notes only"]
+    Labels["Ground titles<br/>reject invented entities"]
+    Build["Response builder<br/>DataPoints + deep NCT citations"]
+    Out["VisualizationResponse<br/>visualization + meta"]
+  end
+
+  UI --> Schema --> Cache
+  Cache -->|yes| Out
+  Cache -->|no| LLM1 --> Clamp --> Heur --> Override --> Strat
+  Strat -->|trend| Year --> Local
+  Strat -->|compare drugs| Multi --> Local
+  Strat -->|default| Page --> Local
+  Local --> Agg --> Enc --> LLM2 --> Labels --> Build --> Out
+  Out --> UI
+```
+
+**What is LLM vs code**
+
+| Stage | Who decides | Why |
+|-------|-------------|-----|
+| Search filters & chart *intent* | LLM + heuristics | Flexible NL |
+| Trial **counts** / edge weights | Code (`aggregator`) | No invented bar heights |
+| Chart **encoding** (axes) | Code (`viz_maps`) | Stable frontend contract |
+| Title / notes | LLM, then grounded | Pretty labels without rewriting data |
+| Citations | Code (`citations`) | Real NCT + API field paths |
+
+**ASCII summary**
+
 ```
 NL query → LLM Interpreter (enum-clamped) → search params
                 ↓
