@@ -10,60 +10,100 @@ Ask things like “Pembrolizumab trials by year since 2015” or “which sponso
 
 ## Quick start
 
-**Requirements:** Python 3.11+, OpenAI API key
+**Requirements:** Python 3.11+, OpenAI API key, a normal terminal (Terminal / PowerShell / CMD — not a Python REPL).
 
-### 1. Install
+On Windows, use `python` (not `python3`) if `python3` is not found. Open the UI at **http://localhost:8000/** — do **not** open `http://0.0.0.0:8000/` (that bind address is not a browser URL).
+
+### 1. Clone
+
+```bash
+git clone https://github.com/ShubhamRSY/ClinSight-Agent.git
+cd ClinSight-Agent
+```
+
+### 2. Create & activate a virtualenv
+
+**macOS / Linux**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+**Windows (CMD)**
+
+```bat
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+**Windows (PowerShell)**
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+If PowerShell blocks activation: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
+
+### 3. Install
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Configure
+### 4. Configure
 
-```bash
-# Prefer a local .env (never commit secrets)
-export OPENAI_API_KEY="sk-..."
-export OPENAI_MODEL="gpt-4o-mini"          # optional; this is the default
+**Preferred (all platforms):** create a `.env` file in the repo root (never commit it):
 
-# Optional: pin “today” for reproducible “last N months” demos/tests
-export CLINSIGHT_REFERENCE_DATE="2026-07-29"
 ```
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4o-mini
+```
+
+**Or set env vars in the shell:**
+
+| Platform | Commands |
+|----------|----------|
+| **macOS / Linux** | `export OPENAI_API_KEY="sk-..."` <br> `export OPENAI_MODEL="gpt-4o-mini"` |
+| **Windows CMD** | `set OPENAI_API_KEY=sk-...` <br> `set OPENAI_MODEL=gpt-4o-mini` |
+| **Windows PowerShell** | `$env:OPENAI_API_KEY="sk-..."` <br> `$env:OPENAI_MODEL="gpt-4o-mini"` |
+
+Optional (reproducible “last N months” demos/tests): set `CLINSIGHT_REFERENCE_DATE=2026-07-29` the same way.
 
 See [Environment variables](#environment-variables) for the full list.
 
-### 3. Start
+### 5. Start
 
 ```bash
 python main.py
 ```
 
+Leave that terminal running. Then open a **browser**:
+
 | URL | Purpose |
 |-----|---------|
-| http://localhost:8000/ | Interactive demo UI |
+| **http://localhost:8000/** | Interactive demo UI |
 | http://localhost:8000/docs | Swagger / OpenAPI |
 | http://localhost:8000/health | Health check |
 | `POST /api/v1/query` | Main API |
 
 Demo UI: form + optional filters, Chart.js charts, SVG network graphs, deep citations, and raw JSON.
 
-### 4. Open the demo video
+### 6. Open the demo video
 
-From the repo root, open the walkthrough files in `docs/demo/`:
+From the repo root:
 
-```bash
-# macOS — open the folder in Finder
-open docs/demo/
-
-# or play the video directly
-open docs/demo/clinsight-demo.mp4
-```
+| Platform | Open demo folder |
+|----------|------------------|
+| **macOS** | `open docs/demo/` |
+| **Linux** | `xdg-open docs/demo/` |
+| **Windows** | `explorer docs\demo` |
 
 | File | Path |
 |------|------|
 | Demo video (MP4) | [`docs/demo/clinsight-demo.mp4`](docs/demo/clinsight-demo.mp4) |
 | Demo video (WebM) | [`docs/demo/clinsight-demo.webm`](docs/demo/clinsight-demo.webm) |
-
-On Linux use `xdg-open docs/demo/`; on Windows use `explorer docs\demo`.
 
 ---
 
