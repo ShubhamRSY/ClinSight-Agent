@@ -1,3 +1,9 @@
+"""Unit tests for aggregation, heuristics, grounding, citations, and intent routing.
+
+Covers deterministic chart counts, anti-hallucination entity stripping, viz maps,
+and temporal/condition extraction — no live CT.gov or OpenAI calls.
+"""
+
 import pytest
 
 from app.engine.aggregator import (

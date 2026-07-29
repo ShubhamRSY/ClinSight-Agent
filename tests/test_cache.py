@@ -1,3 +1,5 @@
+"""Tests for the in-process TTL query response cache."""
+
 from app.schemas.input import QueryRequest
 from app.schemas.output import (
     DataPoint,

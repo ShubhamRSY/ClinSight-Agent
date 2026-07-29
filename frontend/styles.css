@@ -1,3 +1,10 @@
+/*
+ * ClinSight demo UI styles.
+ *
+ * Layout: query form + filters, Chart.js canvas / SVG network, citations panel.
+ * Tokens (--ink, --accent, …) keep the clinical green palette consistent.
+ */
+
 :root {
   --ink: #14201c;
   --ink-soft: #3d4f47;

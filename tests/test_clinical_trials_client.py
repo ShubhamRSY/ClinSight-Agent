@@ -1,3 +1,5 @@
+"""Tests for the ClinicalTrials.gov async client (pagination, retries; HTTP mocked)."""
+
 import pytest
 
 from app.api.clinical_trials import ClinicalTrialsClient
