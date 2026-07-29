@@ -48,6 +48,26 @@ Demo UI: form + optional filters, Chart.js charts, SVG network graphs, deep cita
 
 ---
 
+## Demo
+
+Local UI at [http://localhost:8000/](http://localhost:8000/) after `python main.py`. No separate deploy required for grading — clone, configure the key, and run.
+
+### Screenshots
+
+**1. Demo UI** — query composer, optional filters, example chips, and results panel
+
+![ClinSight demo UI](docs/screenshots/01-demo-ui.png)
+
+**2. Time-series result** — Pembrolizumab trial starts by year since 2015, with metadata and deep citations
+
+![Time series visualization](docs/screenshots/02-time-series-result.png)
+
+**3. Categorical result** — NSCLC trials by phase (bar chart) with truncation honesty in `meta`
+
+![Phase bar chart visualization](docs/screenshots/03-phase-bar-result.png)
+
+---
+
 ## Environment variables
 
 | Variable | Default | Description |
