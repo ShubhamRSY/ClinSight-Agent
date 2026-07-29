@@ -1,8 +1,10 @@
 # ClinSight Agent
 
-Natural-language clinical-trial questions → **frontend-ready visualization JSON**, backed by live [ClinicalTrials.gov API v2](https://clinicaltrials.gov/data-api/api) data.
+ClinSight Agent turns natural-language questions about clinical trials into **chart-ready JSON** a frontend can render immediately.
 
-Counts and groupings are computed in code. The LLM interprets the question and labels the chart — it does **not** invent bar heights.
+Ask things like “Pembrolizumab trials by year since 2015” or “which sponsors lead diabetes studies?” and the service returns a typed visualization (`time_series`, `bar_chart`, `pie_chart`, `network_graph`, and more) plus metadata and deep NCT citations.
+
+**How it works:** live data comes from the [ClinicalTrials.gov API v2](https://clinicaltrials.gov/data-api/api). An LLM interprets the question and writes titles/notes; **counts, groupings, and encodings are computed in code** so the model never invents bar heights. A small demo UI is included at `/`.
 
 ---
 
