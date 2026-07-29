@@ -296,37 +296,37 @@ How one question moves from **ingestion → processing → output**:
 
 ```mermaid
 flowchart TD
-  subgraph Ingest["1. Ingestion"]
-    UI["Demo UI or client<br/>POST /api/v1/query"]
-    Schema["Pydantic QueryRequest<br/>validate filters · extra=forbid"]
-    Cache{"Response cache hit?"}
+  subgraph ingest [1 Ingestion]
+    UI[Demo UI or client POST /api/v1/query]
+    Schema[Pydantic QueryRequest validation]
+    Cache{Response cache hit?}
   end
 
-  subgraph Interpret["2. Interpret & ground"]
-    LLM1["OpenAI interpreter<br/>search params · aggregation · viz hint"]
-    Clamp["Enum clamp<br/>allow-listed aggregations / statuses"]
-    Heur["Heuristics<br/>temporal bounds · intent routing<br/>strip ungrounded entities"]
-    Override["Structured filters win<br/>drug / condition / country / years"]
+  subgraph interpret [2 Interpret and ground]
+    LLM1[OpenAI interpreter]
+    Clamp[Enum clamp allow-lists]
+    Heur[Heuristics grounding and intent]
+    Override[Structured filters win]
   end
 
-  subgraph Fetch["3. Fetch live trials"]
-    Strat{"Fetch strategy"}
-    Year["Year-bucketed fetch<br/>fair long trends"]
-    Multi["Multi-drug merge<br/>Drug A vs Drug B"]
-    Page["Paginated CT.gov v2<br/>retries · rate-limit pacing"]
+  subgraph fetch [3 Fetch live trials]
+    Strat{Fetch strategy}
+    Year[Year-bucketed fetch]
+    Multi[Multi-drug merge]
+    Page[Paginated CT.gov v2]
   end
 
-  subgraph Process["4. Process & aggregate"]
-    Local["Local post-filters<br/>status · phase · sponsor · country · years"]
-    Agg["Deterministic aggregator<br/>counts / edge weights<br/>NEVER from LLM"]
-    Enc["viz_maps encoding<br/>x / y / series channels"]
+  subgraph process [4 Process and aggregate]
+    Local[Local post-filters]
+    Agg[Deterministic aggregator]
+    Enc[viz_maps encoding]
   end
 
-  subgraph Present["5. Present & cite"]
-    LLM2["OpenAI classifier<br/>title + notes only"]
-    Labels["Ground titles<br/>reject invented entities"]
-    Build["Response builder<br/>DataPoints + deep NCT citations"]
-    Out["VisualizationResponse<br/>visualization + meta"]
+  subgraph present [5 Present and cite]
+    LLM2[OpenAI title and notes]
+    Labels[Ground titles]
+    Build[Response builder plus citations]
+    Out[VisualizationResponse]
   end
 
   UI --> Schema --> Cache
