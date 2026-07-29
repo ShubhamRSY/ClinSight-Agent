@@ -134,6 +134,7 @@ _NETWORK_AGGREGATIONS = frozenset({
 
 
 def resolve_viz_type(aggregation: str, requested: Optional[str] = None) -> str:
+    """Pick a viz type from aggregation (+ optional LLM request)."""
     requested = (requested or "").strip().lower()
     default = DEFAULT_VIZ_TYPE.get(aggregation, "bar_chart")
 
@@ -165,12 +166,15 @@ def resolve_viz_type(aggregation: str, requested: Optional[str] = None) -> str:
 
 
 def get_field_labels(aggregation: str) -> tuple[str, str]:
+    """Return (x_field, y_field) names for an aggregation."""
     return FIELD_LABELS.get(aggregation, ("category", "count"))
 
 
 def get_field_types(aggregation: str) -> tuple[str, str]:
+    """Return (x_type, y_type) encoding types for an aggregation."""
     return FIELD_TYPES.get(aggregation, ("nominal", "quantitative"))
 
 
 def get_series_field(aggregation: str) -> Optional[str]:
+    """Optional series/color field name for grouped charts."""
     return SERIES_FIELD.get(aggregation)

@@ -113,10 +113,12 @@ _DRUG_LIKE_SUFFIXES = (
 
 
 def _tokenize_query(query: str) -> list[str]:
+    """Split query into alphabetic tokens."""
     return re.findall(r"[a-zA-Z][a-zA-Z'-]*", query or "")
 
 
 def _looks_like_drug_token(token: str) -> bool:
+    """Heuristic: token ends with a drug-like suffix (-mab, -nib, …)."""
     t = token.lower()
     if len(t) < 5:
         return False
@@ -124,16 +126,19 @@ def _looks_like_drug_token(token: str) -> bool:
 
 
 def _has_trial_intent(query: str) -> bool:
+    """True if query mentions trial/study visualization intent."""
     q = (query or "").lower()
     return any(marker in q for marker in _TRIAL_INTENT_MARKERS)
 
 
 def _allows_unfiltered_overview(query: str) -> bool:
+    """True for broad status/overview questions without entities."""
     q = (query or "").lower()
     return any(phrase in q for phrase in _UNFILTERED_OVERVIEW_PHRASES)
 
 
 def _has_structured_request_filters(request: QueryRequest) -> bool:
+    """True if the request body set any structured filter."""
     return any(
         (
             request.drug_name,
@@ -147,6 +152,7 @@ def _has_structured_request_filters(request: QueryRequest) -> bool:
 
 
 def _has_search_filters(search_params: dict, interpretation: dict) -> bool:
+    """True if interpretation already has CT.gov search params or focus drugs."""
     if any(search_params.get(k) for k in ("term", "cond", "intr", "locn", "status")):
         return True
     if interpretation.get("sponsor"):
@@ -168,6 +174,7 @@ def _maybe_infer_single_token_search(query: str, search_params: dict) -> dict:
 
 
 def _reference_date() -> date:
+    """Today or CLINSIGHT_REFERENCE_DATE for relative phrases."""
     return get_reference_date()
 
 
@@ -244,6 +251,7 @@ def _extract_years_from_text(text: str) -> tuple[int | None, int | None]:
 
 
 def _coerce_year(value) -> int | None:
+    """Coerce a value to a plausible year or None."""
     if isinstance(value, bool):
         return None
     if isinstance(value, (int, float)):
@@ -284,6 +292,7 @@ _PHASE_DESCRIPTORS: frozenset[str] = frozenset({"early", "late", "early phase", 
 
 
 def _is_enrollment_phase_comparison(query: str) -> bool:
+    """True for enrollment-by-phase-group style questions."""
     q = (query or "").lower()
     return (
         ("enrollment" in q or "sizes" in q)
@@ -294,6 +303,7 @@ def _is_enrollment_phase_comparison(query: str) -> bool:
 
 
 def _looks_like_drug_name(part: str) -> bool:
+    """Loose check that a phrase is a drug-like name."""
     cleaned = " ".join(part.strip().split())
     if not cleaned or len(cleaned) > 60:
         return False
@@ -347,6 +357,7 @@ def _extract_compared_drugs(text: str) -> list[str]:
 
 
 def _is_early_late_phase_comparison(query: str) -> bool:
+    """True for early vs late phase comparison questions."""
     q = (query or "").lower()
     return (
         "early" in q
@@ -358,6 +369,7 @@ def _is_early_late_phase_comparison(query: str) -> bool:
 
 
 def _entity_mentioned_in_text(query: str, entity: str) -> bool:
+    """True if entity tokens appear in the query text."""
     q = (query or "").lower()
     entity = (entity or "").strip()
     if not entity:
@@ -393,6 +405,7 @@ def _condition_grounded_in_text(query: str, cond: str) -> bool:
 
 
 def _is_drug_comparison_query(text: str) -> bool:
+    """True when at least two compared drugs are extractable."""
     return len(_extract_compared_drugs(text)) >= 2
 
 
@@ -432,6 +445,7 @@ def _is_plausible_condition(name: str) -> bool:
 
 
 def _extract_condition_from_text(text: str) -> str | None:
+    """Deterministic condition extraction (keywords + patterns)."""
     if _is_drug_comparison_query(text):
         return None
     q = (text or "").lower()
@@ -463,6 +477,7 @@ def _extract_condition_from_text(text: str) -> str | None:
 
 
 def _extract_sponsor_from_text(text: str) -> str | None:
+    """Deterministic sponsor extraction from NL."""
     patterns = (
         r"(?:sponsored\s+by|sponsor(?:ed)?(?:\s+is)?)\s+([A-Za-z][A-Za-z0-9\s&.\'-]+?)"
         r"(?:\s+for|\s+trials|\s+in|\s+with|\s+and|\s*$)",

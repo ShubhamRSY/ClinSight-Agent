@@ -24,27 +24,33 @@ CTGOV_STUDY_URL = "https://clinicaltrials.gov/study/{nct_id}"
 
 
 def study_url(nct_id: str) -> str:
+    """Canonical ClinicalTrials.gov study page URL."""
     return CTGOV_STUDY_URL.format(nct_id=(nct_id or "").strip())
 
 
 def _protocol(study: dict) -> dict:
+    """Return protocolSection dict or empty."""
     return study.get("protocolSection", {}) or {}
 
 
 def _brief_title(study: dict) -> str:
+    """Study brief title from identification module."""
     return get_brief_title(study)
 
 
 def _overall_status(study: dict) -> str:
+    """Overall status string."""
     return (_protocol(study).get("statusModule", {}) or {}).get("overallStatus", "") or ""
 
 
 def _phases(study: dict) -> list[str]:
+    """List of phase strings from the study."""
     phases = (_protocol(study).get("designModule", {}) or {}).get("phases") or []
     return phases if isinstance(phases, list) else ([phases] if phases else [])
 
 
 def _start_date(study: dict) -> str:
+    """Start date string if present."""
     return (
         (_protocol(study).get("statusModule", {}) or {})
         .get("startDateStruct", {})
@@ -53,6 +59,7 @@ def _start_date(study: dict) -> str:
 
 
 def _enrollment(study: dict) -> Optional[int]:
+    """Enrollment count if present."""
     value = (
         (_protocol(study).get("designModule", {}) or {})
         .get("enrollmentInfo", {})
@@ -65,6 +72,7 @@ def _enrollment(study: dict) -> Optional[int]:
 
 
 def _sponsor(study: dict) -> str:
+    """Lead sponsor name."""
     return (
         (_protocol(study).get("sponsorCollaboratorsModule", {}) or {})
         .get("leadSponsor", {})
@@ -73,10 +81,12 @@ def _sponsor(study: dict) -> str:
 
 
 def _conditions(study: dict) -> list[str]:
+    """Condition names from the study."""
     return (_protocol(study).get("conditionsModule", {}) or {}).get("conditions") or []
 
 
 def _drugs(study: dict) -> list[str]:
+    """Drug intervention names."""
     interventions = (
         (_protocol(study).get("armsInterventionsModule", {}) or {}).get("interventions")
         or []
@@ -85,6 +95,7 @@ def _drugs(study: dict) -> list[str]:
 
 
 def _countries(study: dict) -> list[str]:
+    """Facility country names."""
     locations = (
         (_protocol(study).get("contactsLocationsModule", {}) or {}).get("locations")
         or []
@@ -98,6 +109,7 @@ def _countries(study: dict) -> list[str]:
 
 
 def _investigators(study: dict) -> list[str]:
+    """Investigator names."""
     officials = (
         (_protocol(study).get("contactsLocationsModule", {}) or {}).get("overallOfficials")
         or []
@@ -106,6 +118,7 @@ def _investigators(study: dict) -> list[str]:
 
 
 def _format_phase_api(phases: list[str]) -> str:
+    """Format phases for excerpt text."""
     if not phases:
         return "designModule.phases=[]"
     return f"designModule.phases={phases!r}"
@@ -128,6 +141,7 @@ def _exact_match(values: list[str], target: str, *, normalize=None) -> Optional[
 
 
 def _match_country(values: list[str], target: str) -> Optional[str]:
+    """Find country in values matching target aliases."""
     needle = (target or "").strip()
     if not needle:
         return None
@@ -138,6 +152,7 @@ def _match_country(values: list[str], target: str) -> Optional[str]:
 
 
 def _match_drug(values: list[str], target: str) -> Optional[str]:
+    """Find drug in values matching target."""
     return _exact_match(
         values,
         target,
@@ -146,6 +161,7 @@ def _match_drug(values: list[str], target: str) -> Optional[str]:
 
 
 def _entity_label(raw: str, prefix: str) -> str:
+    """Strip typed prefix (Drug:/Sponsor:) from entity labels."""
     text = (raw or "").strip()
     if text.startswith(prefix):
         return text[len(prefix):].strip()
@@ -153,6 +169,7 @@ def _entity_label(raw: str, prefix: str) -> str:
 
 
 def _make_citation(nct_id: str, excerpt: str) -> Citation:
+    """Build a Citation model with nct_id, url, and excerpt."""
     return Citation(nct_id=nct_id, url=study_url(nct_id), excerpt=excerpt)
 
 

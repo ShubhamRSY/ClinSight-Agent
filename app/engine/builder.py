@@ -22,6 +22,7 @@ from app.schemas.output import (
 
 
 def _build_study_map(studies: list[dict]) -> dict[str, dict]:
+    """Index studies by NCT id for citation lookup."""
     return {
         s.get("protocolSection", {}).get("identificationModule", {}).get("nctId", ""): s
         for s in studies
@@ -37,6 +38,7 @@ def build_data_points(
     viz_type: str = "bar_chart",
     aggregation: str = "by_status",
 ) -> list[DataPoint]:
+    """Convert aggregated rows into DataPoint marks with deep citations."""
     study_map = _build_study_map(studies)
     points = []
     reserved = {

@@ -11,6 +11,7 @@ from typing import Optional
 
 
 def extract_field(study: dict, *path: str) -> Optional[str]:
+    """Walk nested protocol JSON path; return a scalar string or None."""
     section = study.get("protocolSection", {})
     for key in path:
         if isinstance(section, dict):
@@ -27,6 +28,7 @@ def extract_field(study: dict, *path: str) -> Optional[str]:
 
 
 def extract_field_list(study: dict, *path) -> list:
+    """Walk nested path; return a list (empty if missing)."""
     section = study.get("protocolSection", {})
     for key in path:
         if isinstance(section, dict):
@@ -39,6 +41,7 @@ def extract_field_list(study: dict, *path) -> list:
 
 
 def extract_date_year(study: dict, *path) -> Optional[int]:
+    """Extract calendar year from a date field path."""
     year, _ = extract_date_parts(study, *path)
     return year
 
@@ -60,14 +63,17 @@ def extract_date_parts(study: dict, *path) -> tuple[Optional[int], Optional[int]
 
 
 def get_nct_id(study: dict) -> str:
+    """NCT identifier for a study."""
     return extract_field(study, "identificationModule", "nctId") or ""
 
 
 def get_brief_title(study: dict) -> str:
+    """Brief title string."""
     return extract_field(study, "identificationModule", "briefTitle") or ""
 
 
 def _format_phase(phase: Optional[str]) -> str:
+    """Normalize raw phase enum to display label."""
     if not phase:
         return "NA"
     raw = str(phase).strip().upper().replace(" ", "_")
@@ -88,10 +94,12 @@ def _format_phase(phase: Optional[str]) -> str:
 
 
 def _format_status(status: Optional[str]) -> str:
+    """Normalize overall status for display."""
     return status.replace("_", " ").title() if status else "Unknown"
 
 
 def get_phase(study: dict) -> str:
+    """Primary display phase for a study."""
     phases = extract_field(study, "designModule", "phases")
     if isinstance(phases, list) and phases:
         return _format_phase(phases[0])
@@ -101,6 +109,7 @@ def get_phase(study: dict) -> str:
 
 
 def get_enrollment(study: dict) -> Optional[int]:
+    """Enrollment count if available."""
     value = extract_field(study, "designModule", "enrollmentInfo", "count")
     if value is None:
         return None
@@ -111,6 +120,7 @@ def get_enrollment(study: dict) -> Optional[int]:
 
 
 def get_drugs(study: dict, limit: int = 3) -> list[str]:
+    """Drug-like intervention names (filters out non-drugs)."""
     interventions = (
         study.get("protocolSection", {})
         .get("armsInterventionsModule", {})
@@ -291,6 +301,7 @@ def normalize_condition_name(name: str) -> str:
 
 
 def get_conditions(study: dict, limit: int = 3) -> list[str]:
+    """Condition names from the study (limited)."""
     seen_keys: set[str] = set()
     result: list[str] = []
     for raw in extract_field_list(study, "conditionsModule", "conditions"):
@@ -334,10 +345,12 @@ def study_matches_condition_filter(study: dict, target: str) -> bool:
 
 
 def get_sponsor(study: dict) -> Optional[str]:
+    """Lead sponsor name or None."""
     return extract_field(study, "sponsorCollaboratorsModule", "leadSponsor", "name")
 
 
 def get_countries(study: dict, limit: int = 3) -> list[str]:
+    """Unique facility countries (limited)."""
     locations = (
         study.get("protocolSection", {})
         .get("contactsLocationsModule", {})
@@ -432,6 +445,7 @@ def study_matches_country_filter(study: dict, country_filter: str) -> bool:
 
 
 def get_investigators(study: dict, limit: int = 2) -> list[str]:
+    """Investigator names (limited)."""
     officials = (
         study.get("protocolSection", {})
         .get("contactsLocationsModule", {})

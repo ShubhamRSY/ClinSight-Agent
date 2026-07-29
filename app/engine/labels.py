@@ -36,6 +36,7 @@ _AGGREGATION_TITLES = {
 
 
 def _filter_snippets(filters: dict) -> list[str]:
+    """Human-readable snippets from applied filters for titles."""
     snippets: list[str] = []
     if filters.get("drugs"):
         snippets.append(" vs ".join(str(d) for d in filters["drugs"]))
@@ -58,6 +59,7 @@ def _filter_snippets(filters: dict) -> list[str]:
 
 
 def _year_span_from_data(aggregated_data: list[dict]) -> Optional[str]:
+    """Min–max year span from aggregated year labels."""
     years: list[int] = []
     for row in aggregated_data or []:
         raw = row.get("year") or row.get("x") or row.get("label")

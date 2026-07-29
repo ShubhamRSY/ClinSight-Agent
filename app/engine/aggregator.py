@@ -60,6 +60,7 @@ NETWORK_ENTITY_LIMIT = 3
 SCATTER_POINT_LIMIT = 80
 
 def aggregate_by_year(studies: list[dict]) -> list[dict]:
+    """Count trials by start year; attach sample NCT ids for citations."""
     buckets: dict[int, list[dict]] = defaultdict(list)
     for s in studies:
         year = extract_date_year(s, "statusModule", "startDateStruct", "date")
@@ -78,6 +79,7 @@ def aggregate_by_year(studies: list[dict]) -> list[dict]:
 
 
 def aggregate_by_phase(studies: list[dict]) -> list[dict]:
+    """Count trials by protocol phase."""
     buckets: dict[str, list[dict]] = defaultdict(list)
     for s in studies:
         buckets[get_phase(s)].append(s)
@@ -94,6 +96,7 @@ def aggregate_by_phase(studies: list[dict]) -> list[dict]:
 
 
 def aggregate_by_status(studies: list[dict]) -> list[dict]:
+    """Count trials by overall status."""
     buckets: dict[str, list[dict]] = defaultdict(list)
     for s in studies:
         buckets[_format_status(extract_field(s, "statusModule", "overallStatus"))].append(s)
@@ -110,6 +113,7 @@ def aggregate_by_status(studies: list[dict]) -> list[dict]:
 
 
 def aggregate_by_sponsor(studies: list[dict], top_n: int = DEFAULT_TOP_N) -> list[dict]:
+    """Top-N lead sponsors by trial count."""
     buckets: dict[str, list[dict]] = defaultdict(list)
     for s in studies:
         sponsor = get_sponsor(s)
@@ -128,6 +132,7 @@ def aggregate_by_sponsor(studies: list[dict], top_n: int = DEFAULT_TOP_N) -> lis
 
 
 def aggregate_by_condition(studies: list[dict], top_n: int = DEFAULT_TOP_N) -> list[dict]:
+    """Top-N conditions by trial count."""
     buckets: dict[str, list[dict]] = defaultdict(list)
     for s in studies:
         for c in get_conditions(s):
@@ -183,6 +188,7 @@ def aggregate_by_location(
 
 
 def aggregate_by_drug(studies: list[dict], top_n: int = DEFAULT_TOP_N) -> list[dict]:
+    """Top-N drug interventions by trial count."""
     buckets: dict[str, list[dict]] = defaultdict(list)
     for s in studies:
         for name in get_drugs(s):
@@ -200,6 +206,7 @@ def aggregate_by_drug(studies: list[dict], top_n: int = DEFAULT_TOP_N) -> list[d
 
 
 def aggregate_phase_by_status(studies: list[dict]) -> list[dict]:
+    """Grouped phase × status trial counts."""
     buckets: dict[tuple[str, str], list[dict]] = defaultdict(list)
     for s in studies:
         key = (get_phase(s), _format_status(extract_field(s, "statusModule", "overallStatus")))
@@ -229,6 +236,7 @@ _ENROLLMENT_BINS = [
 
 
 def _enrollment_bin_label(enrollment: int) -> str | None:
+    """Map enrollment size to a histogram bin label."""
     for low, high, label in _ENROLLMENT_BINS:
         if low <= enrollment <= high:
             return label
@@ -282,6 +290,7 @@ def aggregate_by_phase_group(studies: list[dict]) -> list[dict]:
 
 
 def aggregate_enrollment_histogram(studies: list[dict]) -> list[dict]:
+    """Histogram of enrollment sizes across studies."""
     bins = _ENROLLMENT_BINS
     buckets: dict[str, list[dict]] = {label: [] for _, _, label in bins}
     for s in studies:
@@ -336,6 +345,7 @@ def aggregate_enrollment_by_phase_group(studies: list[dict]) -> list[dict]:
 
 
 def aggregate_year_enrollment_scatter(studies: list[dict], limit: int = SCATTER_POINT_LIMIT) -> list[dict]:
+    """Scatter rows of start year vs enrollment (capped)."""
     points = []
     for s in studies:
         year = extract_date_year(s, "statusModule", "startDateStruct", "date")
@@ -383,6 +393,7 @@ def aggregate_phase_by_drug(
         }
 
     def matched_drugs(study: dict) -> list[str]:
+        """matched drugs."""
         found: list[str] = []
         seen = set()
         # Wider scan when comparing specific drugs so long intervention lists still match.

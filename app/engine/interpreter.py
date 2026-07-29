@@ -39,6 +39,7 @@ class LLMServiceError(Exception):
     """Raised when the OpenAI call fails in a user-visible way."""
 
     def __init__(self, message: str, status_code: int = 502):
+        """init."""
         super().__init__(message)
         self.status_code = status_code
 
@@ -47,6 +48,7 @@ class QueryInterpretationError(Exception):
     """Raised when the query cannot be mapped to a scoped clinical-trials search."""
 
     def __init__(self, message: str):
+        """init."""
         super().__init__(message)
         self.status_code = 422
 

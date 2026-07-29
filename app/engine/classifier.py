@@ -42,6 +42,7 @@ async def classify_visualization(
     total_count: int,
     filters_applied: dict,
 ) -> dict:
+    """Ask the LLM for title/notes only; fall back to grounded templates on failure."""
     client = AsyncOpenAI(api_key=OPENAI_API_KEY)
 
     # Strip internal citation ids before sending to the LLM.
