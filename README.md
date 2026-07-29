@@ -103,7 +103,7 @@ From the repo root:
 | File | Path | Notes |
 |------|------|-------|
 | Demo video (MP4) | [`docs/demo/clinsight-demo.mp4`](docs/demo/clinsight-demo.mp4) | Small preview (~1 MB) — opens easily on GitHub |
-| Demo recording (ZIP) | [`docs/demo/clinsight-demo.zip`](docs/demo/clinsight-demo.zip) | Full screen recording with audio (~59 MB) — download, unzip, play the `.mov` |
+| Demo recording (MOV) | [`docs/demo/clinsight-demo.mov`](docs/demo/clinsight-demo.mov) | Full screen recording with audio (~61 MB) — download and play locally |
 
 Or open the folder locally (see commands above).
 
@@ -118,7 +118,7 @@ Local UI at [http://localhost:8000/](http://localhost:8000/) after `python main.
 Short walkthrough (~4.5 min): time-series → phase bar chart → drug–sponsor network (and more in the recording).
 
 - **Light preview:** [docs/demo/clinsight-demo.mp4](docs/demo/clinsight-demo.mp4)
-- **Full recording + audio:** [docs/demo/clinsight-demo.zip](docs/demo/clinsight-demo.zip) (download → unzip → play the `.mov`)
+- **Full recording + audio:** [docs/demo/clinsight-demo.mov](docs/demo/clinsight-demo.mov) (~61 MB — download and play in QuickTime/VLC)
 
 ### Screenshots
 
