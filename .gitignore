@@ -18,4 +18,7 @@ __pycache__/
 Take-Home Assignment*.pdf
 LLM API Request.pdf
 
+# Ignore stray recordings; keep the checked-in demo under docs/demo/
 *.webm
+!docs/demo/*.webm
+!docs/demo/*.mp4

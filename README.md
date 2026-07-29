@@ -100,10 +100,12 @@ From the repo root:
 | **Linux** | `xdg-open docs/demo/` |
 | **Windows** | `explorer docs\demo` |
 
-| File | Path |
-|------|------|
-| Demo video (MP4) | [`docs/demo/clinsight-demo.mp4`](docs/demo/clinsight-demo.mp4) |
-| Demo video (WebM) | [`docs/demo/clinsight-demo.webm`](docs/demo/clinsight-demo.webm) |
+| File | Path | Notes |
+|------|------|-------|
+| Demo video (MP4) | [`docs/demo/clinsight-demo.mp4`](docs/demo/clinsight-demo.mp4) | Prefer this — opens reliably on GitHub |
+| Demo video (WebM) | [`docs/demo/clinsight-demo.webm`](docs/demo/clinsight-demo.webm) | Optional; if GitHub shows “Error loading page”, download the file or use the MP4 |
+
+Or open the folder locally (see commands above) — playback there is always reliable.
 
 ---
 
@@ -115,10 +117,10 @@ Local UI at [http://localhost:8000/](http://localhost:8000/) after `python main.
 
 Short walkthrough (~1 min): time-series → phase bar chart → drug–sponsor network.
 
-Navigate to the files under **`docs/demo/`**:
+Navigate to the files under **`docs/demo/`** (prefer the **MP4** in the GitHub UI):
 
 - [docs/demo/clinsight-demo.mp4](docs/demo/clinsight-demo.mp4)
-- [docs/demo/clinsight-demo.webm](docs/demo/clinsight-demo.webm)
+- [docs/demo/clinsight-demo.webm](docs/demo/clinsight-demo.webm) (optional; download if the browser preview fails)
 
 ### Screenshots
 
