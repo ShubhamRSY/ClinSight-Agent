@@ -52,6 +52,12 @@ Demo UI: form + optional filters, Chart.js charts, SVG network graphs, deep cita
 
 Local UI at [http://localhost:8000/](http://localhost:8000/) after `python main.py`. No separate deploy required for grading — clone, configure the key, and run.
 
+### Demo video
+
+Short walkthrough (~1 min): time-series → phase bar chart → drug–sponsor network.
+
+- [docs/demo/clinsight-demo.mp4](docs/demo/clinsight-demo.mp4)
+
 ### Screenshots
 
 **1. Demo UI** — query composer, optional filters, example chips, and results panel
