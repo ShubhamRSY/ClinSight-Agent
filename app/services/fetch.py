@@ -1,4 +1,10 @@
-"""ClinicalTrials.gov fetch strategies (pagination, year buckets, multi-drug)."""
+"""ClinicalTrials.gov fetch strategies (pagination, year buckets, multi-drug).
+
+Why multiple strategies?
+- Default paging + StartDate:desc biases toward newest trials → bad for long trends.
+- Year-bucketed fetch: one request per calendar year so older years are not dropped.
+- Multi-drug fetch: Drug A vs Drug B gets a fair page budget per drug, then merge.
+"""
 
 from __future__ import annotations
 
@@ -11,13 +17,15 @@ from app.engine.aggregator import get_nct_id, normalize_country_name
 from app.schemas.input import QueryRequest
 from app.services.filters import build_start_date_advanced_filter, normalize_phase
 
-# Aggregations that bucket by start year need full historical coverage, not newest-first pages.
+# Aggregations that need historical coverage (avoid newest-first sort bias).
 TREND_AGGREGATIONS = frozenset({"by_year", "year_enrollment_scatter"})
 TREND_FETCH_CAP = 5000
 TREND_PER_YEAR_CAP = 5000
+# Small pauses reduce CT.gov 429 rate limits when looping years / drugs.
 YEAR_BUCKET_PAUSE_SECONDS = 0.25
 MULTI_DRUG_PAUSE_SECONDS = 0.75
 
+# Only request fields we actually aggregate / cite (keeps payloads smaller).
 STUDY_FIELDS = (
     "protocolSection.identificationModule.nctId",
     "protocolSection.identificationModule.briefTitle",
@@ -50,6 +58,7 @@ def resolve_study_fetch_limit(aggregation: str, request_max: Optional[int]) -> O
 
 
 def trend_end_year(effective_end: Optional[int]) -> int:
+    """Inclusive end year for bucket loops; +1 covers the current partial year."""
     if effective_end is not None:
         return effective_end
     return get_reference_date().year + 1
@@ -114,7 +123,7 @@ async def fetch_studies_for_query(
     sort: Optional[str] = None,
     max_studies: Optional[int] = None,
 ) -> dict:
-    """Fetch CT.gov studies; for Drug A vs Drug B, page each drug separately then merge."""
+    """Pick fetch strategy: year buckets (trends), per-drug merge (compares), or plain page."""
     common = {
         "term": search_params.get("term"),
         "cond": search_params.get("cond") or request.condition,

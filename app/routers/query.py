@@ -1,4 +1,15 @@
-"""HTTP orchestration for clinical-trial visualization queries."""
+"""
+HTTP orchestration for clinical-trial visualization queries.
+
+Pipeline (each step is deterministic except the two LLM calls):
+  1. Validate request + optional cache hit
+  2. interpret_query (LLM) → search params + aggregation intent
+  3. Fetch studies from ClinicalTrials.gov (paginated / year-bucketed / multi-drug)
+  4. Local post-filters (status, phase, country, years, …)
+  5. Deterministic aggregate_studies → chart rows + study IDs  (counts NEVER from LLM)
+  6. classify_visualization (LLM) → title/notes only
+  7. build_response + deep citations + cache store
+"""
 
 from __future__ import annotations
 
@@ -38,7 +49,7 @@ from app.services.filters import (
 
 router = APIRouter(prefix="/api/v1", tags=["query"])
 
-# Process-local cache for identical QueryRequest payloads.
+# Process-local only — not shared across workers (documented tradeoff in README).
 query_response_cache = QueryResponseCache(
     ttl_seconds=QUERY_CACHE_TTL_SECONDS,
     max_entries=QUERY_CACHE_MAX_ENTRIES,
@@ -53,6 +64,7 @@ query_response_cache = QueryResponseCache(
     response_description="Vega-lite-style visualization spec plus metadata",
 )
 async def query_clinical_trials(request: QueryRequest):
+    # --- Guardrails -----------------------------------------------------------
     if not OPENAI_API_KEY:
         raise HTTPException(
             status_code=500,
@@ -65,6 +77,7 @@ async def query_clinical_trials(request: QueryRequest):
     if cached is not None:
         return cached
 
+    # --- 1) NL → structured interpretation (LLM + heuristics) -----------------
     try:
         interpretation = await interpret_query(request)
     except QueryInterpretationError as exc:
@@ -81,12 +94,16 @@ async def query_clinical_trials(request: QueryRequest):
     focus_drugs = interpretation.get("focus_drugs") or []
     if not isinstance(focus_drugs, list):
         focus_drugs = []
+    # Unknown aggregation from the model → safe default (status overview).
     if aggregation not in VALID_AGGREGATIONS:
         aggregation = "by_status"
 
+    # Structured request fields win over NL/LLM when both are present
+    # (e.g. query says "melanoma" but condition="Diabetes" → Diabetes).
     effective_start = request.start_year if request.start_year is not None else interpreted_start_year
     effective_end = request.end_year if request.end_year is not None else interpreted_end_year
     effective_condition = request.condition or search_params.get("cond")
+    # "Drug A vs Drug B" must not be treated as a disease condition.
     if effective_condition and re.search(r"\b(?:vs\.?|versus)\b", effective_condition, re.I):
         effective_condition = None
     if len(focus_drugs) >= 2 and not request.condition:
@@ -95,6 +112,8 @@ async def query_clinical_trials(request: QueryRequest):
     if effective_country:
         effective_country = normalize_country_name(effective_country) or effective_country
         search_params = {**search_params, "locn": effective_country}
+
+    # CT.gov AREA[StartDate] filter + sort/limit tuned per aggregation.
     advanced_filter = build_start_date_advanced_filter(
         effective_start,
         interpreted_start_month if request.start_year is None else None,
@@ -103,6 +122,7 @@ async def query_clinical_trials(request: QueryRequest):
     sort = resolve_study_fetch_sort(aggregation, advanced_filter)
     fetch_limit = resolve_study_fetch_limit(aggregation, request.max_studies)
 
+    # --- 2) Fetch live studies ------------------------------------------------
     ct_client = ClinicalTrialsClient()
     try:
         search_result = await fetch_studies_for_query(
@@ -135,6 +155,8 @@ async def query_clinical_trials(request: QueryRequest):
     total_available = search_result.get("totalCount", 0)
     truncated = bool(search_result.get("truncated"))
     fetched_studies = search_result.get("studies", []) or []
+
+    # --- 3) Local safety-net filters (CT.gov text search is fuzzy) ------------
     studies = apply_structured_filters(
         fetched_studies,
         request,
@@ -148,6 +170,7 @@ async def query_clinical_trials(request: QueryRequest):
     total_count = len(studies)
 
     if not studies:
+        # Fetched something but filters wiped it → clarify (422), not a bare 404.
         if fetched_studies:
             raise HTTPException(
                 status_code=422,
@@ -162,6 +185,7 @@ async def query_clinical_trials(request: QueryRequest):
             detail="No clinical trials found matching the query.",
         )
 
+    # --- 4) Deterministic aggregation (bar heights / edge weights) ------------
     aggregated_data = aggregate_studies(
         studies,
         aggregation,
@@ -182,6 +206,7 @@ async def query_clinical_trials(request: QueryRequest):
     x_type, y_type = get_field_types(aggregation)
     series_field = get_series_field(aggregation)
 
+    # Meta.filters mirrors what actually shaped the chart (for UI + grounding).
     filters_applied: dict = {}
     if focus_drugs:
         filters_applied["drugs"] = focus_drugs
@@ -216,6 +241,7 @@ async def query_clinical_trials(request: QueryRequest):
     if request.max_studies is not None:
         filters_applied["max_studies"] = request.max_studies
 
+    # --- 5) Title / notes only (LLM); ungrounded entities rejected in labels ---
     try:
         viz_refinement = await classify_visualization(
             query=request.query,
@@ -232,7 +258,7 @@ async def query_clinical_trials(request: QueryRequest):
     except LLMServiceError as exc:
         raise HTTPException(status_code=exc.status_code, detail=str(exc)) from exc
 
-    # Encoding is always built from aggregation field maps — never LLM field names.
+    # Encoding channels always come from aggregation maps — ignore any LLM fields.
     encoding = build_deterministic_encoding(
         viz_type=viz_type,
         x_field=x_field,
@@ -242,6 +268,7 @@ async def query_clinical_trials(request: QueryRequest):
         series_field=series_field,
     )
 
+    # --- 6) Assemble response + citations ------------------------------------
     response = build_response(
         aggregated_data=aggregated_data,
         studies=studies,

@@ -1,4 +1,9 @@
-"""Deterministic chart titles/notes — no LLM invention of filters or counts."""
+"""Deterministic chart titles/notes — no LLM invention of filters or counts.
+
+``resolve_title_and_notes`` prefers the LLM title when every named entity is
+present in Filters; otherwise it swaps in ``build_template_title`` /
+``build_template_notes`` so labels stay grounded.
+"""
 
 from __future__ import annotations
 

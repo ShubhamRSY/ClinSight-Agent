@@ -1,3 +1,10 @@
+"""Second-stage LLM: chart title and notes only.
+
+Counts, viz type, and encoding are already decided in code. If the model
+mentions entities absent from Filters, ``resolve_title_and_notes`` falls back
+to deterministic templates.
+"""
+
 import json
 
 from openai import APIError, APITimeoutError, AsyncOpenAI, RateLimitError

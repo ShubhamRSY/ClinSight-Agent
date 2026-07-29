@@ -233,8 +233,15 @@ def _validate_interpretation(result: dict) -> dict:
 
 
 async def interpret_query(request: QueryRequest) -> dict:
+    """
+    NL question → search params + aggregation.
+
+    Flow: OpenAI JSON → clamp enums → heuristics (temporal/entities/intent)
+    → structured request fields override NL/LLM → actionable-query gate.
+    """
     client = AsyncOpenAI(api_key=OPENAI_API_KEY)
 
+    # Include optional structured filters in the prompt so the model sees them.
     user_message = f"Query: {request.query}\n"
     if request.drug_name:
         user_message += f"Drug/Intervention: {request.drug_name}\n"
@@ -276,7 +283,8 @@ async def interpret_query(request: QueryRequest) -> dict:
 
     interpretation = _apply_query_heuristics(request.query, _validate_interpretation(result))
     _enrich_search_params_from_text(request.query, request, interpretation)
-    # Explicit structured request fields always win over NL/LLM extraction.
+    # Explicit structured request fields always win over NL/LLM extraction
+    # (conflict example: query "melanoma…" + condition="Diabetes" → Diabetes).
     params = dict(interpretation.get("search_params") or {})
     if request.drug_name:
         params["intr"] = request.drug_name

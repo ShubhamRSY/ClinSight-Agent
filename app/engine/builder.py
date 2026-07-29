@@ -1,4 +1,8 @@
-"""Assemble VisualizationResponse from aggregated rows + study records."""
+"""Assemble VisualizationResponse from aggregated rows + study records.
+
+Attaches deep citations (nct_id + url + field-path excerpt) per datum and sets
+meta.truncated / total_available when the fetch cap was hit.
+"""
 
 from __future__ import annotations
 

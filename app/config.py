@@ -1,8 +1,11 @@
+"""Runtime configuration from environment / .env (never commit secrets)."""
+
 import os
 from datetime import date
 
 from dotenv import load_dotenv
 
+# Loads .env from the working directory when present.
 load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")

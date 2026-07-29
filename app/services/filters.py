@@ -1,4 +1,9 @@
-"""Post-fetch study filtering and small filter helpers."""
+"""Post-fetch study filtering and small filter helpers.
+
+CT.gov query.* / advanced filters are imperfect (fuzzy text match). After fetch we
+re-check status, phase, sponsor, condition, country, and year bounds locally so
+the chart matches what the user asked for.
+"""
 
 from __future__ import annotations
 

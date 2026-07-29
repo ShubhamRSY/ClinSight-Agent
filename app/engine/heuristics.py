@@ -669,7 +669,13 @@ def _resolve_aggregation_intent(
 
 
 def _apply_query_heuristics(query: str, result: dict) -> dict:
-    """Deterministic overrides for clear appendix-style intents."""
+    """
+    Deterministic overrides after the LLM JSON parse.
+
+    Fixes cases a single prompt gets wrong under pressure: temporal phrases,
+    Drug A vs Drug B focus list, sponsor ranking vs status pie, network modes.
+    First matching intent rule wins (see ``_resolve_aggregation_intent``).
+    """
     q = (query or "").lower()
     out = dict(result)
 

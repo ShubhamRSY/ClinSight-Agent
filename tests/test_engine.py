@@ -752,7 +752,8 @@ def test_ct_client_builds_lead_and_phase_params():
     client = ClinicalTrialsClient(max_retries=0)
     params = client._build_params(lead="Pfizer", phase="PHASE3", cond="NSCLC", page_size=50)
     assert params["query.lead"] == "Pfizer"
-    assert params["filter.phase"] == "PHASE3"
+    assert "filter.phase" not in params
+    assert params["filter.advanced"] == "AREA[Phase]PHASE3"
     assert params["query.cond"] == "NSCLC"
 
 
@@ -1123,3 +1124,103 @@ def test_get_conditions_deduplicates_variants():
     conds = get_conditions(raw_study, limit=10)
     assert conds.count("Non-small Cell Lung Cancer") == 1
     assert "Diabetes" in conds
+    assert len(conds) == 2
+
+
+def test_structured_condition_overrides_conflicting_nl_query():
+    """NL says melanoma; structured condition=Diabetes must win for filters + titles."""
+    from app.engine.interpreter import _enrich_search_params_from_text
+    from app.engine.labels import build_template_title, resolve_title_and_notes
+
+    query = "Show melanoma trials by phase"
+    request = QueryRequest(query=query, condition="Diabetes")
+    interpretation = _apply_query_heuristics(
+        query,
+        _validate_interpretation(
+            {
+                "search_params": {"cond": "Melanoma"},
+                "aggregation": "by_phase",
+                "viz_type": "bar_chart",
+                "needs_visualization": True,
+            }
+        ),
+    )
+    _enrich_search_params_from_text(query, request, interpretation)
+    # Same override as interpret_query: structured request fields always win.
+    params = dict(interpretation.get("search_params") or {})
+    if request.condition:
+        params["cond"] = request.condition
+    interpretation["search_params"] = params
+
+    assert params["cond"] == "Diabetes"
+    assert "Melanoma" not in params["cond"]
+
+    melanoma = _study("NCTMEL1", conditions=["Melanoma"], phases=["PHASE3"])
+    diabetes = _study("NCTDIA1", conditions=["Diabetes"], phases=["PHASE2"])
+    kept = apply_structured_filters(
+        [melanoma, diabetes],
+        request,
+        condition_override=request.condition,
+    )
+    assert [s["protocolSection"]["identificationModule"]["nctId"] for s in kept] == ["NCTDIA1"]
+
+    filters = {"condition": "Diabetes"}
+    title = build_template_title("by_phase", filters)
+    assert "Diabetes" in title
+    assert "Melanoma" not in title
+
+    safe_title, notes = resolve_title_and_notes(
+        llm_title="Melanoma Trials by Phase",
+        llm_notes="Showing melanoma only",
+        aggregation="by_phase",
+        filters=filters,
+        aggregated_data=[{"phase": "Phase 2", "trial_count": 1}],
+        total_count=1,
+    )
+    assert "Melanoma" not in safe_title
+    assert "Diabetes" in safe_title
+    assert "Melanoma" not in notes
+
+
+def test_phase_compare_with_missing_drug_does_not_invent_counts():
+    """Pembrolizumab vs fake drug: keep compare intent, never invent bars for zero hits."""
+    from app.engine.aggregator import aggregate_phase_by_drug
+    from app.engine.heuristics import _extract_compared_drugs
+    from app.engine.labels import build_template_title
+
+    query = "Compare phases for Pembrolizumab versus ZZZZNotARealDrug999"
+    compared = _extract_compared_drugs(query)
+    assert "Pembrolizumab" in compared
+    assert "ZZZZNotARealDrug999" in compared
+
+    interpretation = _apply_query_heuristics(
+        query,
+        _validate_interpretation(
+            {
+                "search_params": {"intr": "Pembrolizumab OR ZZZZNotARealDrug999"},
+                "aggregation": "by_status",
+                "viz_type": None,
+                "needs_visualization": True,
+                "focus_drugs": compared,
+            }
+        ),
+    )
+    assert interpretation["aggregation"] == "phase_by_drug"
+    assert interpretation.get("focus_drugs") == compared
+
+    studies = [
+        _study("NCTP1", drugs=["Pembrolizumab"], phases=["PHASE2"]),
+        _study("NCTP2", drugs=["Pembrolizumab"], phases=["PHASE3"]),
+        _study("NCTP3", drugs=["Pembrolizumab"], phases=["PHASE3"]),
+    ]
+    rows = aggregate_phase_by_drug(studies, focus_drugs=compared)
+    drugs_in_chart = {r["drug"] for r in rows}
+    assert drugs_in_chart == {"Pembrolizumab"}
+    assert "ZZZZNotARealDrug999" not in drugs_in_chart
+    assert all(r["trial_count"] > 0 for r in rows)
+    assert sum(r["trial_count"] for r in rows) == 3
+
+    filters = {"drugs": compared}
+    title = build_template_title("phase_by_drug", filters)
+    assert "Pembrolizumab" in title
+    assert "ZZZZNotARealDrug999" in title

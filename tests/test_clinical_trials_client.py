@@ -65,6 +65,15 @@ def test_build_params_includes_lead_sponsor():
 def test_build_params_normalizes_phase_filter():
     client = ClinicalTrialsClient(max_retries=0)
     params = client._build_params(phase="PHASE3", page_size=10)
-    assert params["filter.phase"] == "PHASE3"
+    assert "filter.phase" not in params
+    assert params["filter.advanced"] == "AREA[Phase]PHASE3"
     params2 = client._build_params(phase="EARLY_PHASE1,PHASE1", page_size=10)
-    assert params2["filter.phase"] == "EARLY_PHASE1,PHASE1"
+    assert params2["filter.advanced"] == "(AREA[Phase]EARLY_PHASE1 OR AREA[Phase]PHASE1)"
+    params3 = client._build_params(
+        phase="PHASE3",
+        advanced_filter="AREA[StartDate]RANGE[2018-01-01,2024-12-31]",
+        page_size=10,
+    )
+    assert params3["filter.advanced"] == (
+        "AREA[Phase]PHASE3 AND AREA[StartDate]RANGE[2018-01-01,2024-12-31]"
+    )

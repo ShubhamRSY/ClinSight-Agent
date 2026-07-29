@@ -1,3 +1,9 @@
+"""Async ClinicalTrials.gov Data API v2 client.
+
+Handles pagination (nextPageToken), retries on 429/5xx, timeouts, and
+parameter hygiene (status/phase allow-lists, lead sponsor, phase).
+"""
+
 import asyncio
 import re
 from typing import Optional
@@ -117,8 +123,11 @@ class ClinicalTrialsClient:
             kept = [p for p in parts if p in VALID_CT_STATUSES]
             if kept:
                 params["filter.overallStatus"] = ",".join(kept)
+
+        # Phase: live CT.gov v2 no longer accepts filter.phase (returns 400
+        # "unknown parameter"). Use Essie AREA[Phase] inside filter.advanced.
+        phase_expr: Optional[str] = None
         if phase:
-            # CT.gov filter.phase expects EARLY_PHASE1, PHASE1, PHASE2, …
             parts = [p.strip().upper().replace(" ", "_") for p in phase.split(",") if p.strip()]
             kept_phases: list[str] = []
             for raw in parts:
@@ -129,17 +138,21 @@ class ClinicalTrialsClient:
                     kept_phases.append(compact)
                 elif compact == "NA" or raw in {"NA", "NOT_APPLICABLE"}:
                     kept_phases.append("NA")
-            # Preserve order, drop dupes.
             seen: set[str] = set()
-            ordered = []
+            ordered: list[str] = []
             for p in kept_phases:
                 if p in VALID_CT_PHASES and p not in seen:
                     seen.add(p)
                     ordered.append(p)
             if ordered:
-                params["filter.phase"] = ",".join(ordered)
-        if advanced_filter:
-            params["filter.advanced"] = advanced_filter
+                clauses = [f"AREA[Phase]{p}" for p in ordered]
+                phase_expr = clauses[0] if len(clauses) == 1 else "(" + " OR ".join(clauses) + ")"
+
+        advanced_parts = [p for p in (phase_expr, advanced_filter) if p]
+        if advanced_parts:
+            params["filter.advanced"] = (
+                advanced_parts[0] if len(advanced_parts) == 1 else " AND ".join(advanced_parts)
+            )
         if sort:
             params["sort"] = sort
         if fields:

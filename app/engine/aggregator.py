@@ -1,5 +1,8 @@
 """Deterministic aggregation of ClinicalTrials.gov studies into chart rows.
 
+Important design rule: the LLM never invents trial_count / edge_weight values.
+Every bar, slice, point, and network edge is counted here from fetched studies.
+
 Field extractors live in ``study_fields``; viz encoding maps in ``viz_maps``.
 This module owns bucket/network aggregators and the ``aggregate_studies`` entrypoint.
 """
@@ -361,6 +364,8 @@ def aggregate_phase_by_drug(
 
     When focus_drugs is set (e.g. Pembrolizumab vs Nivolumab), only those
     series are shown — not co-occurring chemotherapies from the same trials.
+
+    Drugs with zero matches produce no rows (we do not invent 0-height bars).
     """
     focus_canonical = [normalize_drug_name(d) for d in (focus_drugs or []) if normalize_drug_name(d)]
     focus_keys = {d.casefold(): d for d in focus_canonical}

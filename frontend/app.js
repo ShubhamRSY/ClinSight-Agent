@@ -1,3 +1,12 @@
+/**
+ * ClinSight demo UI
+ *
+ * Flow: collect form → POST /api/v1/query → render by visualization.type
+ *   - Chart.js: time_series, bar/pie/histogram/scatter/grouped/stacked
+ *   - SVG: network_graph (bipartite layout)
+ * Click a mark to focus that datum's deep citations (nct_id + excerpt).
+ */
+
 const EXAMPLES = [
   {
     name: "Trials over time",
