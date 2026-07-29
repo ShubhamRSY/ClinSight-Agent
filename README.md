@@ -107,7 +107,7 @@ Short walkthrough (~1 min): time-series → phase bar chart → drug–sponsor n
 | `status` | string | No | CT.gov status / aliases; comma-lists allowed |
 | `max_studies` | int | No | 100–5000 per-request fetch cap |
 
-Invalid optional filters (e.g. `status=fuck`, inverted years) return **422** before any upstream call. Unknown JSON fields are rejected (`extra=forbid`).
+Invalid optional filters (e.g. `status=not-a-real-status`, inverted years) return **422** before any upstream call. Unknown JSON fields are rejected (`extra=forbid`).
 
 **Example**
 

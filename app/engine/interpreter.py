@@ -301,7 +301,7 @@ async def interpret_query(request: QueryRequest) -> dict:
     if request.end_year is not None:
         interpretation["end_year"] = request.end_year
     if request.status:
-        # Already normalized/validated on QueryRequest (rejects invalid values like "fuck").
+        # Already normalized/validated on QueryRequest (rejects unknown status enums).
         params = dict(interpretation.get("search_params") or {})
         params["status"] = request.status
         interpretation["search_params"] = params

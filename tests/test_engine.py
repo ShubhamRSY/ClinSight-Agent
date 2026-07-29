@@ -883,7 +883,7 @@ def test_optional_filter_rejects_invalid_status():
     with pytest.raises(ValidationError) as exc:
         QueryRequest(
             query="Which countries have the most recruiting trials for lung cancer?",
-            status="fuck",
+            status="not-a-real-status",
         )
     assert "Invalid status" in str(exc.value)
 
@@ -965,7 +965,7 @@ def test_optional_filter_rejects_blank_gibberish_entity():
 
 
 def test_optional_filter_full_bad_payload_does_not_construct():
-    """Mirrors the demo form filled with invalid Status=fuck plus other filters."""
+    """Mirrors the demo form filled with invalid Status plus other filters."""
     from pydantic import ValidationError
     from app.schemas.input import QueryRequest
 
@@ -977,7 +977,7 @@ def test_optional_filter_full_bad_payload_does_not_construct():
             trial_phase="Phase 3",
             sponsor="Pfizer",
             country="United States",
-            status="fuck",
+            status="not-a-real-status",
             start_year=2015,
             end_year=2024,
         )

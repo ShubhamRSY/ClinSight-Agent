@@ -158,7 +158,7 @@ def test_e2e_invalid_status_rejected_before_pipeline(client, monkeypatch):
         "/api/v1/query",
         json={
             "query": "Which countries have the most recruiting trials for lung cancer?",
-            "status": "fuck",
+            "status": "not-a-real-status",
         },
     )
     assert res.status_code == 422
